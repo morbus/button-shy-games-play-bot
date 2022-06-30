@@ -1,0 +1,43 @@
+{
+	"name": "button-shy-play-bot",
+	"main": "dist/main.js",
+	"scripts": {
+		"build": "tsc",
+		"lint": "eslint \"src/**/*.ts\"",
+		"prettier": "prettier --write \"src/**/*.ts\"",
+		"start": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node ./dist/main.js\"",
+		"start:dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node ./dist/main.js\"",
+		"start:prod": "cross-env NODE_ENV=production node ./dist/main.js"
+	},
+	"dependencies": {
+		"@discordjs/collection": "^0.7.0",
+		"@sapphire/decorators": "^4.3.6",
+		"@sapphire/discord-utilities": "^2.11.2",
+		"@sapphire/discord.js-utilities": "^4.11.3",
+		"@sapphire/framework": "^2.5.1",
+		"@sapphire/plugin-editable-commands": "^1.2.0",
+		"@sapphire/plugin-logger": "^2.2.1",
+		"@sapphire/plugin-subcommands": "^2.2.0",
+		"@sapphire/time-utilities": "^1.7.4",
+		"@sapphire/utilities": "^3.6.2",
+		"config": "^3.3.7",
+		"cross-env": "^7.0.3",
+		"discord.js": "^13.8.1"
+	},
+	"devDependencies": {
+		"@sapphire/eslint-config": "^4.3.7",
+		"@sapphire/prettier-config": "^1.4.3",
+		"@sapphire/ts-config": "^3.3.4",
+		"@types/config": "^0.0.41",
+		"@types/node": "^18.0.0",
+		"eslint": "^8.18.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.7.1",
+		"tsc-watch": "^5.0.3",
+		"typescript": "^4.7.4"
+	},
+	"eslintConfig": {
+		"extends": "@sapphire"
+	},
+	"prettier": "@sapphire/prettier-config"
+}

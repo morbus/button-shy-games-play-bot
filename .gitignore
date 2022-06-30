@@ -1,0 +1,17 @@
+
+# Local configuration.
+config/local*
+
+# Dependencies.
+node_modules
+vendor
+
+# Compiled output.
+/dist
+main.js
+src/**/*.js
+*.js.map
+
+# Operating system files.
+.DS_Store
+Thumbs.db
