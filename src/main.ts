@@ -1,4 +1,5 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
+import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-logger/register';
 import config from 'config';
 
