@@ -6,6 +6,7 @@ import config from 'config';
 const client = new SapphireClient({
 	caseInsensitiveCommands: true,
 	intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
+	loadMessageCommandListeners: true,
 	logger: { level: LogLevel.Debug },
 	shards: 'auto'
 });

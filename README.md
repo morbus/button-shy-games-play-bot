@@ -11,8 +11,8 @@ A Discord bot to facilitate asynchronous play of [Button Shy games](https://butt
 
 1. To facilitate Discord-hosted gameplay of Button Shy games.
 2. To ensure players each have their own physical copy of the game.
-3. To become an invited bot member of the official Button Shy Discord.
 4. To teach and encourage interactions with the bot by watching the bot.
+3. To become an invited bot member of the official Button Shy Discord.
 
 ## Documentation
 
@@ -33,3 +33,25 @@ This section is only necessary if you intend to run your own Discord bot.
 ## Button Shy game data
 
 @TODO Describe high-level but include details in per-game GitHub Page.
+
+## Why message instead of slash commands?
+
+- PRO: Message commands can do anything with enough effort.
+- CON: Message commands require custom help, validation, etc.
+- PRO: Slash commands allow autocompletion, hinting, choices, etc.
+- CON: Slash commands are limited to 100 per bot.
+    - There are more than 100 Button Shy games.
+    - Let's remain hopeful that we'll implement them all ;)
+    - Thus, we can't use `/{GAMENAME}` as we'll run out of space.
+- CON: Can we make slash commands where the game is an option?
+    - Possibly, but that'd require a lot more code scaffolding.
+    - `/generate {GAMENAME} {PLAYER..} {OPTION..}`
+    - `/start {GAMENAME} {PLAYER..} {OPTION..}`
+    - `/turn {GAMENAME} {GAMEID} {OPTION..}`
+    - This could get quite ugly for descriptive strings (in an RPG).
+      - If we want to log and "replay" games, the bot needs everything.
+      - Logging help asynchronous play across days without backscrolling.
+      - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
+      - Then the bot would have to echo that back into the channel.
+      - This, by itself, is probably the chief killer of slash commands.
+- **DECISION:** Re-evaluate slash commands after a few games are implemented.
