@@ -9,12 +9,10 @@ nav_order: 3
 ## Installation
 
 1. Run `npm install`.
-2. Copy `config/default.json` to `config/local-development.json`.
-3. Add your Discord bot token to `config/local-development.json`.
-4. Add your Button Shy game data (see below) to `config/local-development.json`.
-5. Copy `config/local-development.json` to `config/local-production.json`.
-6. For development, run `npm run start` for auto-restart on file changes.
-7. For production, run `npm build` and `npm run start:production`.
+2. Copy the `.env.example` file to `.env`.
+3. Edit `.env` to configure the bot and its authentication.
+4. For development, run `npm run start` for auto-restart on file changes.
+5. For production, run `npm build` and `npm run start:production`.
 
 ## Button Shy game data
 

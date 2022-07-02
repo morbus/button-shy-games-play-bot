@@ -1,6 +1,7 @@
 
 # Local configuration.
-config/local*
+.env
+game-data
 
 # Dependencies.
 node_modules

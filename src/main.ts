@@ -1,7 +1,8 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-logger/register';
-import config from 'config';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const client = new SapphireClient({
 	caseInsensitiveCommands: true,
@@ -13,7 +14,7 @@ const client = new SapphireClient({
 const main = async () => {
 	try {
 		client.logger.info('Logging in to Discord.');
-		await client.login(config.get('botDiscordToken'));
+		await client.login(process.env.BOT_DISCORD_TOKEN);
 	} catch (error) {
 		client.logger.fatal(error);
 		client.destroy();
