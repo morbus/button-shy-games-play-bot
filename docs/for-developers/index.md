@@ -29,15 +29,13 @@ nav_order: 3
     - There are more than 100 Button Shy games.
     - Let's grossly assume we'll implement them all ;)
     - We can't use `/{GAMENAME}` as we'd run out of space.
-- CON: Can we make slash commands where the game is an option?
-    - Possibly, but that'd require a lot more code scaffolding.
+- PRO: We could make slash commands where the game is an option.
     - `/generate {GAMENAME} {PLAYER..} {OPTION..}`
     - `/start {GAMENAME} {PLAYER..} {OPTION..}`
     - `/turn {GAMENAME} {GAMEID} {OPTION..}`
-- CON: This could get quite ugly for descriptive strings (in an RPG).
-    - If we want to log and "replay" games, the bot needs everything.
-    - Logging helps asynchronous play across days without backscrolling.
-    - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
-      - Then the bot would have to echo that back into the channel.
-      - This, by itself, is probably the chief killer of slash commands.
+    - CON: This could get ugly for paragraph long strings (in an RPG).
+      - If we want to log and "replay" games, the bot needs everything.
+      - Logging helps asynchronous play across days without backscrolling.
+      - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
 - **DECISION:** Re-evaluate slash commands after a few games are implemented.
+- **CONSIDER:** Why not implement _both_ messages and slash commands?
