@@ -6,7 +6,7 @@ import type { Message } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'IGuessThisIsIt',
-	aliases: ['igtii'],
+	aliases: ['i-guess-this-is-it', 'igtii'],
 	description: 'A two-player game about saying goodbye.'
 })
 export class IGuessThisIsItCommand extends Command {
