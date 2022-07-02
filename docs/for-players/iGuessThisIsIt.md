@@ -20,13 +20,13 @@ To play this game using the Button Shy Play Bot, you must own a copy.
 @BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
 ```
 
-| Argument(s)         | Description                                                                                                         |
-|---------------------|---------------------------------------------------------------------------------------------------------------------|
-| `@BOTNAME`          | **Required.** Address the bot to run commands.                                                                      |
-| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.                                                                        |
-| `generate`          | **Required.** Tell the bot what game command to run.                                                                |
-| `@PLAYER1 @PLAYER2` | **Optional.** The 0, 1, or 2 players to generate a game for. If no players are mentioned, the current user is used. |
-| `--with-setup`      | **Optional.** Include this flag if you'd like dealt cards, the Story grid, and the Goodbye pile randomized too.     |
+| Arguments           | Description                                                                                                             |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `@BOTNAME`          | **Required.** Mention the bot to run commands.                                                                          |
+| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.                                                                            |
+| `generate`          | **Required.** Tell the bot what game command to run.                                                                    |
+| `@PLAYER1 @PLAYER2` | **Optional.** The 0, 1, or 2 user mentions to generate a game for. If no users are mentioned, the current user is used. |
+| `--with-setup`      | **Optional.** Include this flag if you'd like dealt cards, the Story grid, and the Goodbye pile randomized too.         |
 
 ### Start a game
 

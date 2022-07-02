@@ -16,7 +16,7 @@ nav_order: 3
 6. For development, run `npm run start` for auto-restart on file changes.
 7. For production, run `npm build` and `npm run start:production`.
 
-## Button Shy game data?
+## Button Shy game data
 
 @todo
 
@@ -27,17 +27,17 @@ nav_order: 3
 - PRO: Slash commands allow autocompletion, hinting, choices, etc.
 - CON: Slash commands are limited to 100 per bot.
     - There are more than 100 Button Shy games.
-    - Let's remain hopeful that we'll implement them all ;)
-    - Thus, we can't use `/{GAMENAME}` as we'll run out of space.
+    - Let's grossly assume we'll implement them all ;)
+    - We can't use `/{GAMENAME}` as we'd run out of space.
 - CON: Can we make slash commands where the game is an option?
     - Possibly, but that'd require a lot more code scaffolding.
     - `/generate {GAMENAME} {PLAYER..} {OPTION..}`
     - `/start {GAMENAME} {PLAYER..} {OPTION..}`
     - `/turn {GAMENAME} {GAMEID} {OPTION..}`
-    - This could get quite ugly for descriptive strings (in an RPG).
-        - If we want to log and "replay" games, the bot needs everything.
-        - Logging help asynchronous play across days without backscrolling.
-        - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
-        - Then the bot would have to echo that back into the channel.
-        - This, by itself, is probably the chief killer of slash commands.
+- CON: This could get quite ugly for descriptive strings (in an RPG).
+    - If we want to log and "replay" games, the bot needs everything.
+    - Logging helps asynchronous play across days without backscrolling.
+    - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
+      - Then the bot would have to echo that back into the channel.
+      - This, by itself, is probably the chief killer of slash commands.
 - **DECISION:** Re-evaluate slash commands after a few games are implemented.
