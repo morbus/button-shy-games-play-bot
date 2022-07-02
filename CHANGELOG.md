@@ -4,7 +4,9 @@
 ## [Unreleased]
 
 - Support @bot <command>?! syntax for everything?
-- Create docs/ and GitHub Pages for bot interactions. Add to README.
+- Move README and CHANGELOG stuff to the docs/ directory too.
+- Make "For Players" and "For Developers" sections.
+- Rename repository to button-shy-games-play-bot.
 
 ## [0.1.0] - 2022-07
 
