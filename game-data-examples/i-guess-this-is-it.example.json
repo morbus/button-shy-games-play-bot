@@ -1,0 +1,29 @@
+{
+	"relationships": [
+		"actors in a musical",
+		"adventurers",
+		["author", "editor"],
+		"bandmates",
+		"business partners",
+		"chefs",
+		"co-workers",
+		"college classmates",
+		"cousins",
+		"friends",
+		"lovers",
+		["master", "apprentice"],
+		"neighbors",
+		"partners in crime",
+		"podcast co-hosts",
+		["puppet", "puppeteer"],
+		"relatives",
+		["robot", "creator"],
+		"roommates",
+		"rivals",
+		"soldiers",
+		"spies",
+		"tag team wrestlers",
+		"teammates",
+		"time travellers"
+	]
+}
