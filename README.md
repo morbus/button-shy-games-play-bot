@@ -1,5 +1,5 @@
 
-# Button Shy Play Bot
+# Button Shy Games Asynchronous Play Bot
 
 A Discord bot to facilitate asynchronous play of [Button Shy games](https://buttonshygames.com).
 
@@ -9,7 +9,7 @@ A Discord bot to facilitate asynchronous play of [Button Shy games](https://butt
 
 ## Goals
 
-1. To facilitate Discord-hosted gameplay of Button Shy games.
+1. To facilitate Discord asynchronous play of Button Shy games.
 2. To become an invited bot of the official Button Shy Discord.
 3. To ensure players each have their own physical copy of the game.
 4. To teach and encourage interactions with the bot by watching the bot.
@@ -35,7 +35,7 @@ This section is only necessary if you intend to run your own Discord bot.
 
 @TODO Describe high-level but include details in per-game GitHub Page.
 
-## Why message instead of slash commands?
+## Why messages instead of slash commands?
 
 - PRO: Message commands can do anything with enough effort.
 - CON: Message commands require custom help, validation, etc.
