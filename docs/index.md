@@ -1,2 +1,2 @@
 
-# Button Shy Games Asynchronous Play Bot
+# Button Shy Games Play Bot

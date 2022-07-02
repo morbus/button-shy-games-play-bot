@@ -1,5 +1,5 @@
 
-# Button Shy Games Asynchronous Play Bot
+# Button Shy Games Play Bot
 
 A Discord bot to facilitate asynchronous play of [Button Shy games](https://buttonshygames.com).
 
