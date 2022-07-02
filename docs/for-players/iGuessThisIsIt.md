@@ -1,13 +1,12 @@
 ---
 layout: default
-parent: Games
+parent: For Players
 ---
 
 # I Guess This Is It
 
-* Buy a physical copy of [I Guess This Is It](https://buttonshygames.com/products/i-guess-this-is-it-1) from Button Shy Games.
-* Buy a print & play copy of [I Guess This Is It](https://www.pnparcade.com/products/i-guess-this-is-it) from PNPArcade.
-* Design by Cezar Capacle & art by Anastasia Khmelevska.
+* Buy a physical copy of [I Guess This Is It at Button Shy Games](https://buttonshygames.com/products/i-guess-this-is-it-1).
+* Buy a print & play copy of [I Guess This Is It at PNPArcade](https://www.pnparcade.com/products/i-guess-this-is-it).
 
 ## Player interactions
 
@@ -34,6 +33,3 @@ To play this game using the Button Shy Play Bot, you must own a copy.
 ### Take a turn in a game
 
 ### End a game
-
-## Developer game data
-
