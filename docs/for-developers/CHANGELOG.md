@@ -10,11 +10,10 @@ nav_order: 4
 - Change nick on server login?
 - Add colorette and other lib/_setup stuff.
 - Support @bot <command>?! syntax for everything?
-- Move README and CHANGELOG stuff to the docs/ directory too.
 - Add in all the Sapphire plugins, cos why not.
 
 ## [0.1.0] - 2022-07
 
 ### Added
 
-- @todo
+- GitHub Pages documentation stubbed out.

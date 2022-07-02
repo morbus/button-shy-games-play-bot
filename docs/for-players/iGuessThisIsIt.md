@@ -14,6 +14,8 @@ To play this game using the Button Shy Play Bot, you must own a copy.
 
 ### Generate a game
 
+@todo
+
 ```
 @BOTNAME IGuessThisIsIt generate
 @BOTNAME IGuessThisIsIt generate @PLAYER1
