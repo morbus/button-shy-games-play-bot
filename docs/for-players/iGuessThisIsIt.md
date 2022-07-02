@@ -16,8 +16,8 @@ To play this game using the Button Shy Play Bot, you must own a copy.
 
 ```
 @BOTNAME IGuessThisIsIt generate
-@BOTNAME IGuessThisIsIt generate @Player1
-@BOTNAME IGuessThisIsIt generate @Player1 @Player2 --with-setup
+@BOTNAME IGuessThisIsIt generate @PLAYER1
+@BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
 ```
 
 | Argument(s)         | Description                                                                                                         |

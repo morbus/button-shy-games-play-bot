@@ -18,6 +18,8 @@ nav_order: 3
 
 ## Button Shy game data?
 
+@todo
+
 ## Why messages instead of slash commands?
 
 - PRO: Message commands can do anything with enough effort.

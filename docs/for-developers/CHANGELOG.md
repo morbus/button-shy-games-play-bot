@@ -1,9 +1,14 @@
+---
+layout: default
+nav_order: 4
+---
 
 # Changelog
 
 ## [Unreleased]
 
 - Change nick on server login?
+- Add colorette and other lib/_setup stuff.
 - Support @bot <command>?! syntax for everything?
 - Move README and CHANGELOG stuff to the docs/ directory too.
 - Add in all the Sapphire plugins, cos why not.
@@ -12,4 +17,4 @@
 
 ### Added
 
-- @TODO
+- @todo
