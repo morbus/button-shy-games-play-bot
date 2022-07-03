@@ -27,13 +27,13 @@ To play this game using the Button Shy Play Bot, you must own a copy.
 @BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
 ```
 
-| Arguments           | Description                                                                                                             |
-|---------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `@BOTNAME`          | **Required.** Mention the bot to run commands.                                                                          |
-| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.                                                                            |
-| `generate`          | **Required.** Tell the bot what game command to run.                                                                    |
-| `@PLAYER1 @PLAYER2` | **Optional.** The 0, 1, or 2 user mentions to generate a game for. If no users are mentioned, the current user is used. |
-| `--with-setup`      | **Optional.** If you'd like dealt cards, the Story grid, and the Goodbye pile generated too.                            |
+| Arguments           | Description                                                               |
+|---------------------|---------------------------------------------------------------------------|
+| `@BOTNAME`          | **Required.** Mention the bot to run commands.                            |
+| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.                              |
+| `generate`          | **Required.** Tell the bot what game command to run.                      |
+| `@PLAYER1 @PLAYER2` | **Optional.** 0, 1, or 2 player mentions. If 0, the current user is used. |
+| `--with-setup`      | **Optional.** Deal cards and generate the Story grid and Goodbye pile.    |
 
 ### Start a game
 
