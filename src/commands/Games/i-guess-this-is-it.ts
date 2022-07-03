@@ -38,15 +38,17 @@ export class IGuessThisIsItCommand extends Command {
 		// const randomElement = array[Math.floor(Math.random() * array.length)];
 		this.container.logger.debug(players);
 		this.container.logger.debug(gameData.public.relationships);
+		this.container.logger.debug(message.content);
 		//this.container.logger.debug(players);
 
 		const embed = new MessageEmbed()
 			.setColor('#ff0000')
-			.setTitle('title')
-			// .setAuthor('Land of Idle Demons', message.author.avatarURL())
+			.setTitle('I Guess This Is It #1231')
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
-			.setDescription('aaa');
-
+			.setDescription('Game ID #1231')
+			.addField('Player 1', "roleplays as a soldier who is saying goodbye because they're going to space.", true)
+			.addField('@MorbusIff', 'roleplays as a soldier who is staying.', true)
+			.addField('Location', 'a school yard');
 		return message.reply({ embeds: [embed] });
 	}
 
