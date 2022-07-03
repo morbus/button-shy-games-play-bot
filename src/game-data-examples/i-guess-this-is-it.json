@@ -1,4 +1,7 @@
 {
+	"private": {
+
+	},
 	"public": {
 		"relationships": [
 			"actors in a musical",
@@ -102,8 +105,5 @@
 			"outside a character's house",
 			"over the phone"
 		]
-	},
-	"private": {
-
 	}
 }
