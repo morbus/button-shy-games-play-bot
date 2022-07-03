@@ -13,7 +13,7 @@ import gameData from '../../game-data/i-guess-this-is-it.json';
 export class IGuessThisIsItCommand extends Command {
 	public override async messageRun(message: Message, args: Args) {
 		this.container.logger.debug(message.content);
-		this.container.logger.debug(gameData.relationships);
+		this.container.logger.debug(gameData.public.relationships);
 
 		const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');

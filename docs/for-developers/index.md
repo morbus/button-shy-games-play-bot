@@ -11,15 +11,14 @@ nav_order: 3
 1. Run `npm install`.
 2. Copy the `.env.example` file to `.env`.
 3. Edit `.env` to configure the bot and its authentication.
-4. Copy the entire `src/game-data-examples` directory to `src/game-data`.
-5. Within `src/game-data`, find a game you want the bot to run.
-   1. Rename `GAMENAME.example.json` to `GAMENAME.json`. 
-   2. Edit `GAMENAME.json` to define Button Shy game data (see below).
-   3. Do not distribute or make public your `GAMENAME.json` files.
+4. Copy the `src/game-data-examples` directory to `src/game-data`.
+5. Within `src/game-data`, find the game you want the bot to run.
+   1. Edit `GAME.json` to define `private` game data (see below).
+   2. Do not distribute the `private` game data of your  `GAME.json` files.
 7. For development, run `npm run start` for auto-restart on file changes.
 8. For production, run `npm build` and `npm run start:production`.
 
-## Button Shy game data
+## `private` game data
 
 @todo
 
