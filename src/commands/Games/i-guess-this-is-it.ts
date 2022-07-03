@@ -44,7 +44,7 @@ export class IGuessThisIsItCommand extends Command {
 			.setColor('#ff0000')
 			.setTitle('title')
 			// .setAuthor('Land of Idle Demons', message.author.avatarURL())
-			.setThumbnail('https://cdn.shopify.com/s/files/1/0728/8287/products/IGTII-Cover_2_large.png')
+			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription('aaa');
 
 		return message.reply({ embeds: [embed] });
