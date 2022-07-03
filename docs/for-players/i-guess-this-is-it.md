@@ -5,8 +5,7 @@ parent: For Players
 
 # I Guess This Is It
 
-![I Guess This Is It cover](../assets/i-guess-this-is-it--cover.png)
-{: float-right }{: width="324px" }
+![I Guess This Is It cover](../assets/i-guess-this-is-it--cover.png){: width="324px" }
 
 _We had such a good run. We were great together. Now we stand in front of each
 other, just minutes before our last goodbye. There’s so much to say. And so
