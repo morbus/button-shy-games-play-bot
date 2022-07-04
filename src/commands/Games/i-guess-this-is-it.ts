@@ -40,18 +40,16 @@ export class IGuessThisIsItCommand extends Command {
 		const reasonForSayingGoodbye = this.arrayShuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = this.arrayShuffle(gameData.public.locations).shift();
 
-		this.container.logger.debug(players[1]);
-
 		players = this.arrayShuffle(players);
 		const playerLeaving = players[0] ? players[0].displayName : 'Player 1';
 		const playerStaying = players[1] ? players[1].displayName : 'Player 2';
 
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
-			.setTitle('#@TODO: I Guess This Is It')
+			.setTitle('#@TODO GAMEID: I Guess This Is It')
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
-			.setDescription('FURTHER INSTRUCTIONS GO HERE SO THAT PLAYERS KNOW WHAT TO DO NEXT')
-			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} who is saying goodbye because ${reasonForSayingGoodbye}.`, true)
+			.setDescription('@TODO HELP')
+			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
 			.addField(`${playerStaying} roleplays as`, `a ${relationship.shift()} who is staying.`, true)
 			.addField('Location', location, true);
 		return message.reply({ embeds: [embed] });
