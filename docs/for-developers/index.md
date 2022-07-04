@@ -11,12 +11,14 @@ nav_order: 3
 1. Run `npm install`.
 2. Copy the `.env.example` file to `.env`.
 3. Edit `.env` to configure the bot and its authentication.
-4. Copy the `src/game-data-examples` directory to `src/game-data`.
-5. Within `src/game-data`, find the game you want the bot to run.
+4. Run `npx prisma migrate dev --name init` to create the database.
+5. Run `npx prisma generate` to update the Prisma Client API.
+6. Copy the `src/game-data-examples` directory to `src/game-data`.
+7. Within `src/game-data`, find the game you want the bot to run.
    1. Edit `GAME.json` to define `private` game data (see below).
    2. Do not distribute the `private` game data of your  `GAME.json` files.
-7. For development, run `npm run start` for auto-restart on file changes.
-8. For production, run `npm build` and `npm run start:production`.
+8. For development, run `npm run start` for auto-restart on file changes.
+9. For production, run `npm build` and `npm run start:production`.
 
 ## `private` game data
 

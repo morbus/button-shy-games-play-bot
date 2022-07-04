@@ -2,6 +2,8 @@
 # Local configuration.
 .env
 src/game-data
+src/prisma/database.sqlite3
+src/prisma/database.sqlite3-journal
 
 # Dependencies.
 node_modules

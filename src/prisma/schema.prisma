@@ -1,0 +1,28 @@
+// @see https://pris.ly/d/prisma-schema
+// Formatted with "npx prisma format".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Games {
+  // Fields.
+  id        Int      @id @default(autoincrement()) /// The unique ID of the game.
+  createdAt DateTime @default(now()) /// The time when the game was created.
+  updatedAt DateTime @updatedAt /// The time when the game was updated.
+  guildId   String /// The unique ID of the Discord guild who created the game.
+  creatorId String /// The unique ID of the Discord user who created the game.
+  message   String /// The creatorId's Discord message that created the game.
+  command   String /// The Discord command that is responsible for the game.
+  state     String /// The JSON representing the current game state.
+
+  // Attributes.
+  @@map("games")
+}
+
+// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#relation-tables
