@@ -104,7 +104,7 @@
       <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
       <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
       <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
-      <option name="SOFT_MARGINS" value="150" />
+      <option name="SOFT_MARGINS" value="80,120" />
       <indentOptions>
         <option name="USE_TAB_CHARACTER" value="true" />
       </indentOptions>
