@@ -1,23 +1,14 @@
-import { LogLevel, SapphireClient } from '@sapphire/framework';
-import '@sapphire/plugin-editable-commands/register';
-import '@sapphire/plugin-logger/register';
-import dotenv from 'dotenv';
-dotenv.config();
+import ButtonShyClient from '#lib/ButtonShyClient';
 
-const client = new SapphireClient({
-	caseInsensitiveCommands: true,
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
-	logger: { level: LogLevel.Debug },
-	shards: 'auto'
-});
+const client = new ButtonShyClient();
 
 const main = async () => {
 	try {
-		client.logger.info('Logging in to Discord.');
-		await client.login(process.env.BOT_DISCORD_TOKEN);
+		await client.login(process.env.BOT_TOKEN);
+		client.logger.info(`Logged in to Discord as username ${client.user!.username}.`);
 	} catch (error) {
 		client.logger.fatal(error);
-		client.destroy();
+		await client.destroy();
 		process.exit(1);
 	}
 };

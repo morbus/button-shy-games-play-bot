@@ -18,7 +18,7 @@ nav_order: 3
    1. Edit `GAME.json` to define `private` game data (see below).
    2. Do not distribute the `private` game data of your  `GAME.json` files.
 8. For development, run `npm run start` for auto-restart on file changes.
-9. For production, run `npm build` and `npm run start:production`.
+9. For production, run `npm run build` and `npm run start:production`.
 
 ## `private` game data
 
