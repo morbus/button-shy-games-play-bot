@@ -9,6 +9,9 @@
 		"start:dev": "cross-env NODE_ENV=development tsc-watch --preserveWatchOutput --onSuccess \"node ./dist/main.js\"",
 		"start:prod": "cross-env NODE_ENV=production node ./dist/main.js"
 	},
+	"imports": {
+	  "#lib/*": "./dist/lib/*.js"
+	},
 	"dependencies": {
 		"@discordjs/builders": "^0.15.0",
 		"@discordjs/collection": "^0.7.0",
@@ -45,5 +48,8 @@
 	"eslintConfig": {
 		"extends": "@sapphire"
 	},
-	"prettier": "@sapphire/prettier-config"
+	"prettier": "@sapphire/prettier-config",
+	"prisma": {
+		"schema": "src/prisma/schema.prisma"
+	}
 }
