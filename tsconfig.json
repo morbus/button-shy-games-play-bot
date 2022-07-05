@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"paths": {
+			"#game-data/*": ["./src/game-data/*.json"],
 			"#lib/*": ["./src/lib/*.ts"]
 		},
 		"removeComments": true,
@@ -10,5 +11,6 @@
 		"target": "ESNext",
 		"tsBuildInfoFile": "./dist/.tsbuildinfo",
 	},
-	"include": ["src"]
+	"include": ["src/**/*", "src/**/*.json"],
+	"exclude": ["src/game-data-examples"]
 }

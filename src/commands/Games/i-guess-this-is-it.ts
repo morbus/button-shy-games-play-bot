@@ -2,9 +2,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import { send } from '@sapphire/plugin-editable-commands';
-//import { shuffle } from '../../lib/utils';
 import { shuffle } from '#lib/utils';
-import gameData from '../../game-data/i-guess-this-is-it.json';
+import gameData from '#game-data/i-guess-this-is-it';
 import type { Args } from '@sapphire/framework';
 import type { GuildMember, Message } from 'discord.js';
 

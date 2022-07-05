@@ -10,7 +10,8 @@
 		"start:prod": "cross-env NODE_ENV=production node ./dist/main.js"
 	},
 	"imports": {
-	  "#lib/*": "./dist/lib/*.js"
+		"#game-data/*": "./dist/game-data/*.json",
+		"#lib/*": "./dist/lib/*.js"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.15.0",
