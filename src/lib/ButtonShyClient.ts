@@ -50,7 +50,7 @@ export default class ButtonShyClient extends SapphireClient {
 			container.logger.warn(event.message);
 		});
 
-		container.prisma.$connect();
+		void container.prisma.$connect();
 	}
 
 	public override async destroy() {
