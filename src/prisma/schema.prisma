@@ -11,18 +11,46 @@ datasource db {
 }
 
 model Games {
-  // Fields.
-  id        Int      @id @default(autoincrement()) /// The unique ID of the game.
-  createdAt DateTime @default(now()) /// The time when the game was created.
-  updatedAt DateTime @updatedAt /// The time when the game was updated.
-  guildId   String /// The unique ID of the Discord guild who created the game.
-  creatorId String /// The unique ID of the Discord user who created the game.
-  message   String /// The creatorId's Discord message that created the game.
-  command   String /// The Discord command that is responsible for the game.
-  state     String /// The JSON representing the current game state.
+  // Fields
+  id           Int      @id @default(autoincrement()) /// The unique ID of the game.
+  createdAt    DateTime @default(now()) /// The time when the game was created.
+  updatedAt    DateTime @updatedAt /// The time when the game was updated.
+  guildId      String /// The unique ID of the Discord guild who created the game.
+  creatorId    String /// The unique ID of the Discord user who created the game.
+  message      String /// The creatorId's Discord message that created the game.
+  command      String /// The Discord command that is responsible for the game.
+  waitingForId String /// The unique ID of the Discord user whose turn it is.
+  ended        Boolean  @default(false) /// Whether the game has ended.
+  state        String /// The JSON representing the current game state.
 
-  // Attributes.
+  // Relations
+  players GamePlayers[]
+
+  // Attributes
   @@map("games")
 }
 
-// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#relation-tables
+model Users {
+  // Fields
+  id String @id
+
+  // Relations
+  games GamePlayers[]
+
+  // Attributes
+  @@map("users")
+}
+
+model GamePlayers {
+  // Fields
+  gameId Int
+  userId String
+
+  // Relations
+  game   Games @relation(fields: [gameId], references: [id])
+  player Users @relation(fields: [userId], references: [id])
+
+  // Attributes
+  @@id([gameId, userId])
+  @@map("game_players")
+}
