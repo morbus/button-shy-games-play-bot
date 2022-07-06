@@ -1,4 +1,8 @@
 /**
+ * General utilities that don't fit other places.
+ */
+
+/**
  * Shuffle an array using the Durstenfeld algorithm, based on Fisher–Yates.
  *
  * Copied from https://github.com/sindresorhus/array-shuffle so we needn't

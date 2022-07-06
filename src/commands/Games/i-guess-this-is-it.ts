@@ -13,7 +13,10 @@ import type { GuildMember, Message } from 'discord.js';
 	description: 'A two-player game about saying goodbye.'
 })
 export class IGuessThisIsItCommand extends Command {
-	// @BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
+	/**
+	 * Example command:
+	 *	@BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
+	 */
 	public override async messageRun(message: Message, args: Args) {
 		this.container.logger.debug(message.content);
 		// const gameId = await args.pick('number').catch(() => 0);
@@ -33,9 +36,12 @@ export class IGuessThisIsItCommand extends Command {
 		return null;
 	}
 
-	// @BOTNAME IGuessThisIsIt generate
-	// @BOTNAME IGuessThisIsIt generate @PLAYER1
-	// @BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
+	/**
+	 * Example commands:
+	 *	@BOTNAME IGuessThisIsIt generate
+	 *	@BOTNAME IGuessThisIsIt generate @PLAYER1
+	 *	@BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
+	 */
 	public async generate(message: Message, players: (GuildMember | null)[]) {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
