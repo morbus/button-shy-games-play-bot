@@ -16,7 +16,7 @@ export class IGuessThisIsItCommand extends Command {
 	// @BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
 	public override async messageRun(message: Message, args: Args) {
 		this.container.logger.debug(message.content);
-		const gameId = await args.pick('number').catch(() => 0);
+		// const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
 
@@ -26,7 +26,7 @@ export class IGuessThisIsItCommand extends Command {
 			}
 
 			case 'start': {
-				return this.start(message, gameId);
+				return this.start(message);
 			}
 		}
 
@@ -53,11 +53,10 @@ export class IGuessThisIsItCommand extends Command {
 			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
 			.addField(`${playerStaying} roleplays as`, `a ${relationship.shift()}.`, true)
 			.addField('Location', location, true);
-		return message.reply({ embeds: [embed] });
+		return send(message, { content: `${players}`, embeds: [embed] });
 	}
 
-	public async start(message: Message, gameId: number) {
-		this.container.logger.debug(gameId);
+	public async start(message: Message) {
 		return send(message, 'inside start');
 	}
 }
