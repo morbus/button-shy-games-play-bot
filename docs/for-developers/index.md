@@ -11,7 +11,7 @@ nav_order: 3
 1. Run `npm install`.
 2. Copy the `.env.example` file to `.env`.
 3. Edit `.env` to configure the bot and its authentication.
-4. Run `npx prisma migrate dev --name init` to create the database.
+4. Run `npx prisma migrate deploy` to create the database.
 5. Run `npx prisma generate` to update the Prisma Client API.
 6. Copy the `src/game-data-examples` directory to `src/game-data`.
 7. Within `src/game-data`, find the game you want the bot to run.

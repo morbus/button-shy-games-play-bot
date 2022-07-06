@@ -12,16 +12,17 @@ datasource db {
 
 model Games {
   // Fields
-  id           Int      @id @default(autoincrement()) /// The unique ID of the game.
-  createdAt    DateTime @default(now()) /// The time when the game was created.
-  updatedAt    DateTime @updatedAt /// The time when the game was updated.
-  guildId      String /// The unique ID of the Discord guild who created the game.
-  creatorId    String /// The unique ID of the Discord user who created the game.
-  message      String /// The creatorId's Discord message that created the game.
-  command      String /// The Discord command that is responsible for the game.
-  waitingForId String /// The unique ID of the Discord user whose turn it is.
-  ended        Boolean  @default(false) /// Whether the game has ended.
-  state        String /// The JSON representing the current game state.
+  id              Int      @id @default(autoincrement()) /// The unique ID of the game.
+  created         DateTime @default(now()) /// The time when the game was created.
+  updated         DateTime @updatedAt /// The time when the game was updated.
+  parentGameId    Int /// The unique ID of an existing game that this one is based on.
+  authorUserId    String /// The unique ID of the Discord user who created the game.
+  guildId         String /// The unique ID of the Discord guild where the game was created.
+  message         String /// The authorUserId's Discord message that created the game.
+  command         String /// The Discord command responsible for running this game.
+  waitingOnUserId String /// The unique ID of the Discord user whose move it is.
+  ended           Boolean  @default(false) /// Whether the game has ended.
+  state           String /// The JSON representing the current game state.
 
   // Relations
   players GamePlayers[]
@@ -52,5 +53,5 @@ model GamePlayers {
 
   // Attributes
   @@id([gameId, userId])
-  @@map("game_players")
+  @@map("games_users")
 }
