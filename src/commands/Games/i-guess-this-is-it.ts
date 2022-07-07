@@ -1,6 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
+import { italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
+import { oneLineInlineLists } from 'common-tags';
 import { send } from '@sapphire/plugin-editable-commands';
 import { shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
@@ -66,11 +68,11 @@ export class IGuessThisIsItCommand extends Command {
 			.setColor('#d8d2cd')
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
-			.setDescription('@TODO HELP')
+			.setDescription(italic('@TODO HELP'))
 			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
 			.addField(`${playerStaying} roleplays as`, `a ${relationship.shift()}.`, true)
 			.addField('Location', location, true);
-		return send(message, { content: `${players}`, embeds: [embed] });
+		return send(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
 	}
 
 	public async start(message: Message) {
