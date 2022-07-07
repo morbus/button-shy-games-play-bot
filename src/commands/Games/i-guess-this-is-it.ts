@@ -46,14 +46,25 @@ export class IGuessThisIsItCommand extends Command {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
-
 		players = shuffle(players);
+
+		const createGame = await this.container.prisma.game.create({
+			data: {
+				guildId: message.guildId!,
+				channelId: message.channelId!,
+				authorUserId: message.author.id,
+				message: message.content,
+				command: 'i-guess-this-is-it',
+				ended: true
+			}
+		});
+
 		const playerLeaving = players[0] ? players[0].displayName : 'Player 1';
 		const playerStaying = players[1] ? players[1].displayName : 'Player 2';
 
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
-			.setTitle('#@TODO GAMEID: I Guess This Is It')
+			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription('@TODO HELP')
 			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)

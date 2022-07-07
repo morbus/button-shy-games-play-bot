@@ -41,9 +41,7 @@ export default class ButtonShyClient extends SapphireClient {
 		});
 
 		container.prisma.$on('query', (event) => {
-			container.logger.debug(`Query: ${event.query}`);
-			container.logger.debug(`Params: ${event.params}`);
-			container.logger.debug(`Duration: ${event.duration}ms`);
+			container.logger.debug(`Query [${event.duration}ms]: ${event.query} ${event.params}`);
 		});
 
 		container.prisma.$on('warn', (event) => {

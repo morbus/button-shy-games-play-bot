@@ -8,6 +8,10 @@ import type { Message } from 'discord.js';
 	description: 'Display bot and API latency.'
 })
 export class PingCommand extends Command {
+	/**
+	 * Example command:
+	 *	@BOTNAME ping
+	 */
 	public override async messageRun(message: Message) {
 		const msg = await send(message, 'Ping?');
 

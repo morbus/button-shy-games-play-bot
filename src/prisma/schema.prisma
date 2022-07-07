@@ -10,46 +10,47 @@ datasource db {
   url      = env("BOT_DATABASE_URL")
 }
 
-model Games {
+model Game {
   // Fields
   id              Int      @id @default(autoincrement()) /// The unique ID of the game.
   created         DateTime @default(now()) /// The time when the game was created.
   updated         DateTime @updatedAt /// The time when the game was updated.
-  parentGameId    Int /// The unique ID of an existing game that this one is based on.
-  authorUserId    String /// The unique ID of the Discord user who created the game.
+  parentGameId    Int? /// The unique ID of an existing game that this one is based on.
   guildId         String /// The unique ID of the Discord guild where the game was created.
+  channelId       String /// The unique ID of the Discord channel where the game was created.
+  authorUserId    String /// The unique ID of the Discord user who created the game.
   message         String /// The authorUserId's Discord message that created the game.
   command         String /// The Discord command responsible for running this game.
-  waitingOnUserId String /// The unique ID of the Discord user whose move it is.
+  waitingOnUserId String? /// The unique ID of the Discord user whose move it is.
   ended           Boolean  @default(false) /// Whether the game has ended.
-  state           String /// The JSON representing the current game state.
+  state           String   @default("{}") /// The JSON representing the current game state.
 
   // Relations
-  players GamePlayers[]
+  players GamePlayer[]
 
   // Attributes
   @@map("games")
 }
 
-model Users {
+model User {
   // Fields
   id String @id
 
   // Relations
-  games GamePlayers[]
+  games GamePlayer[]
 
   // Attributes
   @@map("users")
 }
 
-model GamePlayers {
+model GamePlayer {
   // Fields
   gameId Int
   userId String
 
   // Relations
-  game   Games @relation(fields: [gameId], references: [id])
-  player Users @relation(fields: [userId], references: [id])
+  game   Game @relation(fields: [gameId], references: [id])
+  player User @relation(fields: [userId], references: [id])
 
   // Attributes
   @@id([gameId, userId])
