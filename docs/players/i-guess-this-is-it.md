@@ -19,17 +19,19 @@ much we know will be left unsaid._
 
 To play this game using the Button Shy Games Play Bot, you must own a copy.
 
+### Aliases
+
+This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII`.
+
 ### Start a game
 
-@todo
-
 ```
+%IGTII start @PLAYER1 @PLAYER2
 @BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
 ```
 
 | Arguments           | Description                                               |
 |---------------------|-----------------------------------------------------------|
-| `@BOTNAME`          | **Required.** Mention the bot to run commands.            |
 | `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.              |
 | `generate`          | **Required.** Tell the bot what game command to run.      |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for.   |

@@ -16,12 +16,9 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Would have to be game-specific though, cos maybe they're playing a three
   player cooperative game two-handed.
 - Add footer for the full documentation URL?
-- I Guess This Is It: Require two players.
 - I Guess This Is It: Game data documentation.
-- I Guess This Is It: --with-grid support.
-- I Guess This Is It: Add aliases to docs.
-- I Guess This Is It: roles need "a"/"an", otherwise we gen "roleplays as a AI".
 - I Guess This Is It: Add in the extra prompts from Discord.
+- I Guess This Is It: Add reroll functionality.
 
 ## [0.1.0] - 2022-07
 

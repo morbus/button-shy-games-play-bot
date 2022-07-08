@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
-import { italic } from '@discordjs/builders';
+import { inlineCode, italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
 import { oneLineInlineLists } from 'common-tags';
-import { send } from '@sapphire/plugin-editable-commands';
+import { reply } from '@sapphire/plugin-editable-commands';
 import { shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
 import type { Args } from '@sapphire/framework';
@@ -24,6 +24,10 @@ export class IGuessThisIsItCommand extends Command {
 		// const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
+
+		if (action === 'start' && players.length !== 2) {
+			return reply(message, `:x: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
+		}
 
 		switch (action) {
 			case 'start': {
@@ -63,9 +67,9 @@ export class IGuessThisIsItCommand extends Command {
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(italic('@TODO HELP'))
-			.addField(`${playerLeaving} roleplays as`, `a ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
-			.addField(`${playerStaying} roleplays as`, `a ${relationship.shift()}.`, true)
+			.addField(`${playerLeaving} roleplays as`, `${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
+			.addField(`${playerStaying} roleplays as`, `${relationship.shift()}.`, true)
 			.addField('Location', location, true);
-		return send(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
+		return reply(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
 	}
 }
