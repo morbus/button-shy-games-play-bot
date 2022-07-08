@@ -26,12 +26,8 @@ export class IGuessThisIsItCommand extends Command {
 		const players = await args.repeat('member').catch(() => [message.member]);
 
 		switch (action) {
-			case 'generate': {
-				return this.generate(message, players);
-			}
-
 			case 'start': {
-				return this.start(message);
+				return this.start(message, players);
 			}
 		}
 
@@ -39,12 +35,10 @@ export class IGuessThisIsItCommand extends Command {
 	}
 
 	/**
-	 * Example commands:
-	 *	@BOTNAME IGuessThisIsIt generate
-	 *	@BOTNAME IGuessThisIsIt generate @PLAYER1
-	 *	@BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
+	 * Example command:
+	 *	@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
 	 */
-	public async generate(message: Message, players: (GuildMember | null)[]) {
+	public async start(message: Message, players: (GuildMember | null)[]) {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
@@ -73,9 +67,5 @@ export class IGuessThisIsItCommand extends Command {
 			.addField(`${playerStaying} roleplays as`, `a ${relationship.shift()}.`, true)
 			.addField('Location', location, true);
 		return send(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
-	}
-
-	public async start(message: Message) {
-		return send(message, 'inside start');
 	}
 }

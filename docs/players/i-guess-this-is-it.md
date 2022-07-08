@@ -17,27 +17,22 @@ much we know will be left unsaid._
 
 ## Player interactions
 
-To play this game using the Button Shy Play Bot, you must own a copy.
+To play this game using the Button Shy Games Play Bot, you must own a copy.
 
-### Generate a game
+### Start a game
 
 @todo
 
 ```
-@BOTNAME IGuessThisIsIt generate
-@BOTNAME IGuessThisIsIt generate @PLAYER1
-@BOTNAME IGuessThisIsIt generate @PLAYER1 @PLAYER2 --with-setup
+@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
 ```
 
-| Arguments           | Description                                                               |
-|---------------------|---------------------------------------------------------------------------|
-| `@BOTNAME`          | **Required.** Mention the bot to run commands.                            |
-| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.                              |
-| `generate`          | **Required.** Tell the bot what game command to run.                      |
-| `@PLAYER1 @PLAYER2` | **Optional.** 0, 1, or 2 player mentions. If 0, the current user is used. |
-| `--with-setup`      | **Optional.** Deal cards and generate the Story grid and Goodbye pile.    |
-
-### Start a game
+| Arguments           | Description                                               |
+|---------------------|-----------------------------------------------------------|
+| `@BOTNAME`          | **Required.** Mention the bot to run commands.            |
+| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.              |
+| `generate`          | **Required.** Tell the bot what game command to run.      |
+| `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for.   |
 
 ### Take a turn in a game
 
