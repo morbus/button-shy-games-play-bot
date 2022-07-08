@@ -17,7 +17,6 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   player cooperative game two-handed.
 - Add footer for the full documentation URL?
 - I Guess This Is It: Game data documentation.
-- I Guess This Is It: Add in the extra prompts from Discord.
 - I Guess This Is It: Add reroll functionality.
 
 ## [0.1.0] - 2022-07

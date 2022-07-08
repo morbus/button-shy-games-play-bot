@@ -67,8 +67,8 @@ export class IGuessThisIsItCommand extends Command {
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(italic('@TODO HELP'))
-			.addField(`${playerLeaving} roleplays as`, `${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
-			.addField(`${playerStaying} roleplays as`, `${relationship.shift()}.`, true)
+			.addField(playerLeaving, `Roleplay as ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
+			.addField(playerStaying, `Roleplay as ${relationship.shift()} who is staying.`, true)
 			.addField('Location', location, true);
 		return reply(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
 	}
