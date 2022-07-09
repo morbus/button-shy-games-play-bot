@@ -31,8 +31,6 @@ To start a new game, use:
 @BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
 ``` 
 
-The command syntax is as follows:
-
 | Arguments           | Description                                             |
 |---------------------|---------------------------------------------------------|
 | `@BOTNAME`          | **Required.** A bot mention or prefix.                  |
