@@ -19,22 +19,26 @@ much we know will be left unsaid._
 
 To play this game using the Button Shy Games Play Bot, you must own a copy.
 
-### Aliases
+### Game names
 
 This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII`.
 
 ### Start a game
 
-To start a new game, use **one** of the following examples:
+To start a new game, use:
 
-1. `%IGTII start @PLAYER1 @PLAYER2`
-2. `@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2` 
+```
+@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
+``` 
 
-| Arguments           | Description                                               |
-|---------------------|-----------------------------------------------------------|
-| `IGuessThisIsIt`    | **Required.** Tell the bot what game to use.              |
-| `generate`          | **Required.** Tell the bot what game command to run.      |
-| `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for.   |
+The command syntax is as follows:
+
+| Arguments           | Description                                             |
+|---------------------|---------------------------------------------------------|
+| `@BOTNAME`          | **Required.** A bot mention or prefix.                  |
+| `IGuessThisIsIt`    | **Required.** The game name you want to play.           |
+| `start`             | **Required.** The game action you want to take.         |
+| `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for. |
 
 ### Take a turn in a game
 
