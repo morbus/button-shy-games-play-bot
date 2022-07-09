@@ -1,6 +1,18 @@
 {
 	"private": {
-
+		"__WARNING__": "Do not distribute private game data.",
+		"core": {
+			"storyCards": [
+				{
+					"publicName": "DEM",
+					"privateName": "DEMO CARD",
+					"top": "recognition",
+					"right": "apology",
+					"bottom": "memory",
+					"left": "wish"
+				}
+			]
+		}
 	},
 	"public": {
 		"relationships": [

@@ -25,10 +25,10 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII
 
 ### Start a game
 
-```
-%IGTII start @PLAYER1 @PLAYER2
-@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
-```
+To start a new game, use **one** of the following examples:
+
+1. `%IGTII start @PLAYER1 @PLAYER2`
+2. `@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2` 
 
 | Arguments           | Description                                               |
 |---------------------|-----------------------------------------------------------|
