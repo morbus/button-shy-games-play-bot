@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { inlineCode, italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
-import { oneLine, oneLineInlineLists, stripIndents } from 'common-tags';
+import { oneLine, stripIndents } from 'common-tags';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { addGamePlayers, shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
@@ -20,12 +20,14 @@ export class IGuessThisIsItCommand extends Command {
 	 *	@BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
 	 */
 	public override async messageRun(message: Message, args: Args) {
-		this.container.logger.debug(message.content);
+		this.container.logger.info(message.content);
 		// const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
 
-		// @todo Check for private data definitions.
+		if (gameData.private.base.storyCards.length !== 16) {
+			return reply(message, `:thumbsdown: I Guess This Is It does not have 16 base Story cards defined.`);
+		}
 
 		switch (action) {
 			case 'start': {
@@ -47,11 +49,12 @@ export class IGuessThisIsItCommand extends Command {
 		players = shuffle(players);
 
 		if (players.length !== 2) {
-			return reply(message, `:x: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
+			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
 		}
 
 		const state = {
-			initial: {
+			current: {},
+			starting: {
 				location,
 				players: [
 					{
@@ -88,22 +91,22 @@ export class IGuessThisIsItCommand extends Command {
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(italic(`@TODO HELP`))
 			.addField(
-				state.initial.players[0].displayName,
+				state.starting.players[0].displayName,
 				stripIndents`${oneLine`
-					Roleplay as ${state.initial.players[0].relationship} saying
-					goodbye because ${state.initial.players[0].reasonForSayingGoodbye}.
+					Roleplay as ${state.starting.players[0].relationship} saying
+					goodbye because ${state.starting.players[0].reasonForSayingGoodbye}.
 				`}`,
 				true
 			)
 			.addField(
-				state.initial.players[1].displayName,
+				state.starting.players[1].displayName,
 				stripIndents`${oneLine`
-					Roleplay as ${state.initial.players[1].relationship} who is staying.
+					Roleplay as ${state.starting.players[1].relationship} who is staying.
 				`}`,
 				true
 			)
 			.addField('Location', location, true);
 
-		return reply(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
+		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
 	}
 }

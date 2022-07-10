@@ -1,7 +1,7 @@
 {
 	"private": {
 		"__WARNING__": "Do not distribute private game data.",
-		"core": {
+		"base": {
 			"storyCards": [
 				{
 					"publicName": "DEM",
