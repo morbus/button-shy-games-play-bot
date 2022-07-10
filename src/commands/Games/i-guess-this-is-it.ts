@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { inlineCode, italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
-import { oneLineInlineLists } from 'common-tags';
+import { oneLine, oneLineInlineLists, stripIndents } from 'common-tags';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { addGamePlayers, shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
@@ -24,6 +24,8 @@ export class IGuessThisIsItCommand extends Command {
 		// const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
+
+		// @todo Check for private data definitions.
 
 		switch (action) {
 			case 'start': {
@@ -48,13 +50,33 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `:x: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
 		}
 
+		const state = {
+			initial: {
+				location,
+				players: [
+					{
+						id: players[0]!.id,
+						displayName: players[0]!.displayName,
+						relationship: relationship.shift(),
+						reasonForSayingGoodbye
+					},
+					{
+						id: players[1]!.id,
+						displayName: players[1]!.displayName,
+						relationship: relationship.shift()
+					}
+				]
+			}
+		};
+
 		const createGame = await this.container.prisma.game.create({
 			data: {
 				guildId: message.guildId!,
 				channelId: message.channelId!,
 				authorUserId: message.author.id,
 				message: message.content,
-				command: 'i-guess-this-is-it'
+				command: 'i-guess-this-is-it',
+				state: JSON.stringify(state)
 			}
 		});
 
@@ -65,9 +87,23 @@ export class IGuessThisIsItCommand extends Command {
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(italic(`@TODO HELP`))
-			.addField(players[0]!.displayName, `Roleplay as ${relationship.shift()} saying goodbye because ${reasonForSayingGoodbye}.`, true)
-			.addField(players[1]!.displayName, `Roleplay as ${relationship.shift()} who is staying.`, true)
+			.addField(
+				state.initial.players[0].displayName,
+				stripIndents`${oneLine`
+					Roleplay as ${state.initial.players[0].relationship} saying
+					goodbye because ${state.initial.players[0].reasonForSayingGoodbye}.
+				`}`,
+				true
+			)
+			.addField(
+				state.initial.players[1].displayName,
+				stripIndents`${oneLine`
+					Roleplay as ${state.initial.players[1].relationship} who is staying.
+				`}`,
+				true
+			)
 			.addField('Location', location, true);
+
 		return reply(message, { content: oneLineInlineLists`${players}`, embeds: [embed] });
 	}
 }
