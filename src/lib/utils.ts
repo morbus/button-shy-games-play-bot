@@ -7,7 +7,7 @@ import type { GuildMember } from 'discord.js';
 /**
  * Once a game has been started, create and relate its players.
  */
-export async function addPlayersToGame(players: (GuildMember | null)[], gameId: number) {
+export async function addGamePlayers(gameId: number, players: (GuildMember | null)[]) {
 	for (const player of players) {
 		await container.prisma.gamePlayer.create({
 			data: { gameId, userId: player!.id }

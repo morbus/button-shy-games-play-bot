@@ -4,7 +4,7 @@ import { inlineCode, italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
 import { oneLineInlineLists } from 'common-tags';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { addPlayersToGame, shuffle } from '#lib/utils';
+import { addGamePlayers, shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
 import type { Args } from '@sapphire/framework';
 import type { GuildMember, Message } from 'discord.js';
@@ -58,7 +58,7 @@ export class IGuessThisIsItCommand extends Command {
 			}
 		});
 
-		await addPlayersToGame(players, createGame.id);
+		await addGamePlayers(createGame.id, players);
 
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
