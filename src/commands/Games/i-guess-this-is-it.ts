@@ -1,10 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
-import { inlineCode, italic } from '@discordjs/builders';
+import { codeBlock, inlineCode, italic } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
-import { oneLine, stripIndents } from 'common-tags';
+import { oneLine, oneLineCommaLists, stripIndents } from 'common-tags';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { addGamePlayers, shuffle } from '#lib/utils';
+import { addGamePlayers, componentPublicNameInlineCode, shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
 import type { Args } from '@sapphire/framework';
 import type { GuildMember, Message } from 'discord.js';
@@ -46,13 +46,12 @@ export class IGuessThisIsItCommand extends Command {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
+		const deck = shuffle(gameData.private.base.storyCards);
 		players = shuffle(players);
 
 		if (players.length !== 2) {
 			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
 		}
-
-		const deck = shuffle(gameData.private.base.storyCards);
 
 		const state = {
 			current: {},
@@ -102,6 +101,7 @@ export class IGuessThisIsItCommand extends Command {
 				stripIndents`${oneLine`
 					Roleplay as ${state.starting.players[0].relationship} saying
 					goodbye because ${state.starting.players[0].reasonForSayingGoodbye}.
+					Your starting hand is ${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.players[0].hand)}`}.
 				`}`,
 				true
 			)
@@ -109,10 +109,24 @@ export class IGuessThisIsItCommand extends Command {
 				state.starting.players[1].displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.starting.players[1].relationship} who is staying.
+					Your starting hand is ${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.players[1].hand)}`}.
 				`}`,
 				true
 			)
-			.addField('Location', location, true);
+			.addField('Location', state.starting.location, true)
+			.addField(
+				'Grid',
+				codeBlock(
+					stripIndents`
+						ABC  DEF  GHI
+						ABC  DEF  GHI
+						ABC  DEF  GHI
+						ABC  DEF  GHI
+					`
+				),
+				true
+			)
+			.addField('Goodbye pile', 'Contains ...', true);
 
 		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
 	}

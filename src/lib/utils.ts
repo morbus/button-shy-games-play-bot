@@ -2,6 +2,7 @@
  * General utilities that don't fit other places.
  */
 import { container } from '@sapphire/framework';
+import { inlineCode } from '@discordjs/builders';
 import type { GuildMember } from 'discord.js';
 
 /**
@@ -14,10 +15,19 @@ export async function addGamePlayers(gameId: number, players: (GuildMember | nul
 			update: { id: player!.id },
 			create: { id: player!.id }
 		});
-		await container.prisma.gamePlayer.create({
-			data: { gameId, userId: player!.id }
+		await container.prisma.gamePlayer.upsert({
+			where: { gameId_userId: { gameId, userId: player!.id } },
+			update: { gameId, userId: player!.id },
+			create: { gameId, userId: player!.id }
 		});
 	}
+}
+
+/**
+ * Return the public names of a game component array.
+ */
+export function componentPublicNameInlineCode(components: Array<any>) {
+	return components.map((component) => `${inlineCode(component.publicName)}`);
 }
 
 /**

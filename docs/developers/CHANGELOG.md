@@ -12,7 +12,10 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add in all the Sapphire and Discord plugins, cos why not.
 - Will the theme scrollbar the nav when 100 games exist?
 - Add help hyperlink('text', 'url') into the embed description.
-- "start gaem from GAMEID" functionality, for like-minded fun?
+- "start game from GAMEID" functionality, for like-minded fun?
+- Add "P1" or "P2" notations in state somewhere, for two-handed play.
+- I Guess This Is It: "Your starting hand is...", "The grid is..."
+- I Guess This Is It: And the actual help documentation.
 - I Guess This Is It: Add reroll functionality.
 - I Guess This Is It: Start planning a game turn.
 - I Guess This Is It: Game data documentation.

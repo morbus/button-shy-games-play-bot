@@ -34,7 +34,7 @@ model Game {
 
 model User {
   // Fields
-  id String @id
+  id String @id /// The unique ID of the Discord user who created the game.
 
   // Relations
   games GamePlayer[]
@@ -45,8 +45,8 @@ model User {
 
 model GamePlayer {
   // Fields
-  gameId Int
-  userId String
+  gameId Int /// The unique ID of the game stored in the games table.
+  userId String /// The unique ID of the Discord user who created the game.
 
   // Relations
   game   Game @relation(fields: [gameId], references: [id])
