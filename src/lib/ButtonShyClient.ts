@@ -1,8 +1,9 @@
-import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-logger/register';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 export default class ButtonShyClient extends SapphireClient {

@@ -1,13 +1,13 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { codeBlock, inlineCode, italic } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
-import { oneLine, oneLineCommaLists, stripIndents } from 'common-tags';
-import { reply } from '@sapphire/plugin-editable-commands';
-import { addGamePlayers, componentPublicNameInlineCode, shuffle } from '#lib/utils';
 import gameData from '#game-data/i-guess-this-is-it';
+import { addGamePlayers, componentsNameInlineCode, shuffle } from '#lib/utils';
+import { codeBlock, hyperlink, inlineCode } from '@discordjs/builders';
+import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
+import { Command, CommandOptions } from '@sapphire/framework';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { oneLine, oneLineCommaLists, stripIndents } from 'common-tags';
 import type { GuildMember, Message } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	name: 'IGuessThisIsIt',
@@ -43,6 +43,7 @@ export class IGuessThisIsItCommand extends Command {
 	 *	@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
 	 */
 	public async start(message: Message, players: (GuildMember | null)[]) {
+		const command = `${this.container.client.options.defaultPrefix}IGTII`;
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
@@ -50,7 +51,7 @@ export class IGuessThisIsItCommand extends Command {
 		players = shuffle(players);
 
 		if (players.length !== 2) {
-			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
+			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode(`${command} start @PLAYER1 @PLAYER2`)}.`);
 		}
 
 		const state = {
@@ -95,13 +96,20 @@ export class IGuessThisIsItCommand extends Command {
 			.setColor('#d8d2cd')
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
-			.setDescription(italic(`@TODO HELP`))
+			.setDescription(
+				stripIndents`${oneLine`
+					*Game setup is complete. Story cards are identified by the first three letters of their name.
+					If the randomized prompts create an uncomfortable or unwanted setup, reroll with
+					${inlineCode(`${command} ${createGame.id} reroll`)}.
+					${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
+				`}`
+			)
 			.addField(
 				state.starting.players[0].displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.starting.players[0].relationship} saying
 					goodbye because ${state.starting.players[0].reasonForSayingGoodbye}.
-					Your starting hand is ${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.players[0].hand)}`}.
+					Your starting hand is ${oneLineCommaLists`${componentsNameInlineCode(state.starting.players[0].hand)}`}.
 				`}`,
 				true
 			)
@@ -109,7 +117,7 @@ export class IGuessThisIsItCommand extends Command {
 				state.starting.players[1].displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.starting.players[1].relationship} who is staying.
-					Your starting hand is ${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.players[1].hand)}`}.
+					Your starting hand is ${oneLineCommaLists`${componentsNameInlineCode(state.starting.players[1].hand)}`}.
 				`}`,
 				true
 			)
@@ -126,7 +134,7 @@ export class IGuessThisIsItCommand extends Command {
 				),
 				true
 			)
-			.addField('Goodbye pile', `${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.goodbyePile)}`}`, true);
+			.addField('Goodbye pile', `${oneLineCommaLists`${componentsNameInlineCode(state.starting.goodbyePile)}`}`, true);
 
 		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
 	}

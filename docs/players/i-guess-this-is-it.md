@@ -17,7 +17,7 @@ much we know will be left unsaid._
 
 ## Player interactions
 
-To play this game using the Button Shy Games Play Bot, you must own a copy.
+To play this game using the Button Shy Games Play Bot, both players must own a copy.
 
 ### Game names
 
@@ -28,13 +28,13 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII
 To start a new game, use:
 
 ```
-@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
+%IGTII start @PLAYER1 @PLAYER2
 ``` 
 
 | Arguments           | Description                                             |
 |---------------------|---------------------------------------------------------|
 | `@BOTNAME`          | **Required.** A bot mention or prefix.                  |
-| `IGuessThisIsIt`    | **Required.** The game name you want to play.           |
+| `IGTII`             | **Required.** The game name you want to play.           |
 | `start`             | **Required.** The game action you want to take.         |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for. |
 
