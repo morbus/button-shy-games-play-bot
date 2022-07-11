@@ -13,10 +13,10 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Will the theme scrollbar the nav when 100 games exist?
 - Add help hyperlink('text', 'url') into the embed description.
 - "start gaem from GAMEID" functionality, for like-minded fun?
-- I Guess This Is It: Draw hands, build grid and goodbye.
 - I Guess This Is It: Add reroll functionality.
 - I Guess This Is It: Start planning a game turn.
 - I Guess This Is It: Game data documentation.
+- I Guess This Is It: User-chosen setup should be possible.
 
 ## [0.1.0] - 2022-07
 

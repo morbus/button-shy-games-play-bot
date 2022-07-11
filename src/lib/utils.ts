@@ -9,13 +9,13 @@ import type { GuildMember } from 'discord.js';
  */
 export async function addGamePlayers(gameId: number, players: (GuildMember | null)[]) {
 	for (const player of players) {
-		await container.prisma.gamePlayer.create({
-			data: { gameId, userId: player!.id }
-		});
 		await container.prisma.user.upsert({
 			where: { id: player!.id },
 			update: { id: player!.id },
 			create: { id: player!.id }
+		});
+		await container.prisma.gamePlayer.create({
+			data: { gameId, userId: player!.id }
 		});
 	}
 }

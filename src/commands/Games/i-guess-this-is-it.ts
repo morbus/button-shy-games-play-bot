@@ -52,6 +52,8 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode('IGTII start @PLAYER1 @PLAYER2')}.`);
 		}
 
+		const deck = shuffle(gameData.private.base.storyCards);
+
 		const state = {
 			current: {},
 			starting: {
@@ -61,14 +63,18 @@ export class IGuessThisIsItCommand extends Command {
 						id: players[0]!.id,
 						displayName: players[0]!.displayName,
 						relationship: relationship.shift(),
-						reasonForSayingGoodbye
+						reasonForSayingGoodbye,
+						hand: [deck.shift()]
 					},
 					{
 						id: players[1]!.id,
 						displayName: players[1]!.displayName,
-						relationship: relationship.shift()
+						relationship: relationship.shift(),
+						hand: [deck.shift()]
 					}
-				]
+				],
+				grid: deck.splice(0, 12),
+				goodbyePile: deck
 			}
 		};
 
@@ -79,6 +85,7 @@ export class IGuessThisIsItCommand extends Command {
 				authorUserId: message.author.id,
 				message: message.content,
 				command: 'i-guess-this-is-it',
+				waitingOnUserId: state.starting.players[0].id,
 				state: JSON.stringify(state)
 			}
 		});
