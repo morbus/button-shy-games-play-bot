@@ -118,15 +118,15 @@ export class IGuessThisIsItCommand extends Command {
 				'Grid',
 				codeBlock(
 					stripIndents`
-						ABC  DEF  GHI
-						ABC  DEF  GHI
-						ABC  DEF  GHI
-						ABC  DEF  GHI
+						${state.starting.grid[3].publicName}  ${state.starting.grid[4].publicName}  ${state.starting.grid[11].publicName}
+						${state.starting.grid[2].publicName}  ${state.starting.grid[5].publicName}  ${state.starting.grid[10].publicName}
+						${state.starting.grid[1].publicName}  ${state.starting.grid[6].publicName}  ${state.starting.grid[9].publicName}
+						${state.starting.grid[0].publicName}  ${state.starting.grid[7].publicName}  ${state.starting.grid[8].publicName} 
 					`
 				),
 				true
 			)
-			.addField('Goodbye pile', 'Contains ...', true);
+			.addField('Goodbye pile', `${oneLineCommaLists`${componentPublicNameInlineCode(state.starting.goodbyePile)}`}`, true);
 
 		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
 	}
