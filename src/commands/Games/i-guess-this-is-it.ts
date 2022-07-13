@@ -1,6 +1,7 @@
 import gameData from '#game-data/i-guess-this-is-it';
-import { addGamePlayers, componentsNameInlineCode, shuffle } from '#lib/utils';
-import { codeBlock, hyperlink, inlineCode } from '@discordjs/builders';
+import { addGamePlayers, removeGamePlayers } from '#lib/database';
+import { componentsNameInlineCode, shuffle } from '#lib/utils';
+import { codeBlock, hyperlink } from '@discordjs/builders';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { Command, CommandOptions } from '@sapphire/framework';
@@ -16,12 +17,14 @@ import { MessageEmbed } from 'discord.js';
 })
 export class IGuessThisIsItCommand extends Command {
 	/**
-	 * Example command:
-	 *	@BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
+	 * Master router for all "IGuessThisIsIt" actions.
+	 *
+	 *  Example command:
+	 *    @BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
 	 */
 	public override async messageRun(message: Message, args: Args) {
 		this.container.logger.info(message.content);
-		// const gameId = await args.pick('number').catch(() => 0);
+		const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
 
@@ -31,7 +34,11 @@ export class IGuessThisIsItCommand extends Command {
 
 		switch (action) {
 			case 'start': {
-				return this.start(message, players);
+				return this.start(message, players, gameId);
+			}
+
+			case 'reroll': {
+				return this.reroll(message, players, gameId);
 			}
 		}
 
@@ -39,10 +46,14 @@ export class IGuessThisIsItCommand extends Command {
 	}
 
 	/**
-	 * Example command:
-	 *	@BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
+	 * Start a game.
+	 *
+	 * Example commands:
+	 *   @BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
+	 *
+	 * @see reroll()
 	 */
-	public async start(message: Message, players: (GuildMember | null)[]) {
+	public async start(message: Message, players: (GuildMember | null)[], gameId: number) {
 		const command = `${this.container.client.options.defaultPrefix}IGTII`;
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
@@ -51,11 +62,12 @@ export class IGuessThisIsItCommand extends Command {
 		players = shuffle(players);
 
 		if (players.length !== 2) {
-			return reply(message, `:thumbsdown: I Guess This Is It requires two players: ${inlineCode(`${command} start @PLAYER1 @PLAYER2`)}.`);
+			return gameId === 0
+				? reply(message, `:thumbsdown: I Guess This Is It requires two players: \`${command} start @PLAYER1 @PLAYER2\`.`)
+				: reply(message, `:thumbsdown: I Guess This Is It requires two players: \`${command} ${gameId} reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
-		const state = {
-			current: {},
+		const state: Record<string, any> = {
 			starting: {
 				location,
 				players: [
@@ -78,8 +90,17 @@ export class IGuessThisIsItCommand extends Command {
 			}
 		};
 
-		const createGame = await this.container.prisma.game.create({
-			data: {
+		// "starting" state allows duplicates of the game later.
+		// "current" state always represents the in-progress game state.
+		state.current = state.starting;
+
+		const createGame = await this.container.prisma.game.upsert({
+			where: { id: gameId },
+			update: {
+				waitingOnUserId: state.starting.players[0].id,
+				state: JSON.stringify(state)
+			},
+			create: {
 				guildId: message.guildId!,
 				channelId: message.channelId!,
 				authorUserId: message.author.id,
@@ -90,6 +111,8 @@ export class IGuessThisIsItCommand extends Command {
 			}
 		});
 
+		// Rerolls might change the players.
+		await removeGamePlayers(createGame.id);
 		await addGamePlayers(createGame.id, players);
 
 		const embed = new MessageEmbed()
@@ -98,9 +121,9 @@ export class IGuessThisIsItCommand extends Command {
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(
 				stripIndents`${oneLine`
-					*Game setup is complete. Story cards are identified by the first three letters of their name.
+					*Game setup is complete. Story cards are identified by their first three letters.
 					If the randomized prompts create an uncomfortable or unwanted setup, reroll with
-					${inlineCode(`${command} ${createGame.id} reroll`)}.
+					\`${command} ${createGame.id} reroll @PLAYER1 @PLAYER2\`.
 					${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
 			)
@@ -137,5 +160,25 @@ export class IGuessThisIsItCommand extends Command {
 			.addField('Goodbye pile', `${oneLineCommaLists`${componentsNameInlineCode(state.starting.goodbyePile)}`}`, true);
 
 		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
+	}
+
+	/**
+	 * Reroll (regenerate, re-setup, etc.) an already-setup game.
+	 *
+	 * This is all handled by start() when given a non-zero gameId.
+	 *
+	 * Example commands:
+	 *   @BOTNAME IGuessThisIsIt GAMEID reroll @PLAYER1 @PLAYER2
+	 *
+	 * @see start()
+	 */
+	public async reroll(message: Message, players: (GuildMember | null)[], gameId: number) {
+		const command = `${this.container.client.options.defaultPrefix}IGTII`;
+
+		if (gameId === 0) {
+			return reply(message, `:thumbsdown: I Guess This Is It \`reroll\` requires a game ID: \`${command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
+		}
+
+		return this.start(message, players, gameId);
 	}
 }
