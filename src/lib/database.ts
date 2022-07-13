@@ -1,6 +1,3 @@
-/**
- * Functions for interacting with the database.
- */
 import { container } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 
