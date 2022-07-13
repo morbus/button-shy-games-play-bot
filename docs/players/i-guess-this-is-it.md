@@ -17,7 +17,7 @@ much we know will be left unsaid._
 
 ## Player interactions
 
-To play this game using the Button Shy Games Play Bot, both players must own a copy.
+To play this game using the Button Shy Games Play Bot, all players must own a copy.
 
 ### Game names
 

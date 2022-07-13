@@ -1,33 +1,12 @@
 /**
  * General utilities that don't fit other places.
  */
-import { inlineCode } from '@discordjs/builders';
-import { container } from '@sapphire/framework';
-import type { GuildMember } from 'discord.js';
-
-/**
- * Once a game has been started, create and relate its players.
- */
-export async function addGamePlayers(gameId: number, players: (GuildMember | null)[]): Promise<void> {
-	for (const player of players) {
-		await container.prisma.user.upsert({
-			where: { id: player!.id },
-			update: { id: player!.id },
-			create: { id: player!.id }
-		});
-		await container.prisma.gamePlayer.upsert({
-			where: { gameId_userId: { gameId, userId: player!.id } },
-			update: { gameId, userId: player!.id },
-			create: { gameId, userId: player!.id }
-		});
-	}
-}
 
 /**
  * Returns an array of game component public names.
  */
 export function componentsNameInlineCode(components: Array<any>): Array<string> {
-	return components.map((component) => `${inlineCode(component.publicName)}`);
+	return components.map((component) => `\`${component.publicName}\``);
 }
 
 /**

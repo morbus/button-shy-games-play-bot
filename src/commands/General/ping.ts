@@ -10,7 +10,7 @@ import type { Message } from 'discord.js';
 export class PingCommand extends Command {
 	/**
 	 * Example command:
-	 *	@BOTNAME ping
+	 *   @BOTNAME ping
 	 */
 	public override async messageRun(message: Message) {
 		const msg = await send(message, 'Ping?');
