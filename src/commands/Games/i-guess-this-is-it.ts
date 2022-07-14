@@ -70,37 +70,31 @@ export class IGuessThisIsItCommand extends Command {
 				: reply(message, `:thumbsdown: I Guess This Is It requires two players: \`${command} ${gameId} reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
-		const state: Record<string, any> = {
-			starting: {
-				location,
-				players: [
-					{
-						id: players[0]!.id,
-						displayName: players[0]!.displayName,
-						relationship: relationship.shift(),
-						reasonForSayingGoodbye,
-						hand: [deck.shift()]
-					},
-					{
-						id: players[1]!.id,
-						displayName: players[1]!.displayName,
-						relationship: relationship.shift(),
-						hand: [deck.shift()]
-					}
-				],
-				grid: deck.splice(0, 12),
-				goodbyePile: deck.splice(0, 2)
-			}
+		const state: IGuessThisIsItState = {
+			location,
+			players: [
+				{
+					id: players[0]!.id,
+					displayName: players[0]!.displayName,
+					relationship: relationship.shift(),
+					reasonForSayingGoodbye,
+					hand: [deck.shift()]
+				},
+				{
+					id: players[1]!.id,
+					displayName: players[1]!.displayName,
+					relationship: relationship.shift(),
+					hand: [deck.shift()]
+				}
+			],
+			grid: deck.splice(0, 12),
+			goodbyePile: deck.splice(0, 2)
 		};
-
-		// "starting" state allows duplicates of the game later.
-		// "current" state always represents the in-progress game state.
-		state.current = state.starting;
 
 		const createGame = await this.container.prisma.game.upsert({
 			where: { id: gameId },
 			update: {
-				waitingOnUserId: state.starting.players[0].id,
+				waitingOnUserId: state.players[0].id,
 				state: JSON.stringify(state)
 			},
 			create: {
@@ -109,7 +103,7 @@ export class IGuessThisIsItCommand extends Command {
 				authorUserId: message.author.id,
 				message: message.content,
 				command: 'i-guess-this-is-it',
-				waitingOnUserId: state.starting.players[0].id,
+				waitingOnUserId: state.players[0].id,
 				state: JSON.stringify(state)
 			}
 		});
@@ -119,10 +113,10 @@ export class IGuessThisIsItCommand extends Command {
 		await addGamePlayers(createGame.id, players);
 
 		// Shorthand for the embed.
-		const playerOneHandComponentNames = componentNames(state.starting.players[0].hand, gameData.private.storyCards);
-		const playerTwoHandComponentNames = componentNames(state.starting.players[1].hand, gameData.private.storyCards);
-		const gridComponentNames = componentNames(state.starting.grid, gameData.private.storyCards, false);
-		const goodbyePileComponentNames = componentNames(state.starting.goodbyePile, gameData.private.storyCards);
+		const playerOneHandComponentNames = componentNames(state.players[0].hand, gameData.private.storyCards);
+		const playerTwoHandComponentNames = componentNames(state.players[1].hand, gameData.private.storyCards);
+		const gridComponentNames = componentNames(state.grid, gameData.private.storyCards, false);
+		const goodbyePileComponentNames = componentNames(state.goodbyePile, gameData.private.storyCards);
 
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
@@ -137,23 +131,23 @@ export class IGuessThisIsItCommand extends Command {
 				`}`
 			)
 			.addField(
-				state.starting.players[0].displayName,
+				state.players[0].displayName,
 				stripIndents`${oneLine`
-					Roleplay as ${state.starting.players[0].relationship} saying
-					goodbye because ${state.starting.players[0].reasonForSayingGoodbye}.
+					Roleplay as ${state.players[0].relationship} saying
+					goodbye because ${state.players[0].reasonForSayingGoodbye}.
 					Your starting hand is ${oneLineCommaLists`${playerOneHandComponentNames}`}.
 				`}`,
 				true
 			)
 			.addField(
-				state.starting.players[1].displayName,
+				state.players[1].displayName,
 				stripIndents`${oneLine`
-					Roleplay as ${state.starting.players[1].relationship} who is staying.
+					Roleplay as ${state.players[1].relationship} who is staying.
 					Your starting hand is ${oneLineCommaLists`${playerTwoHandComponentNames}`}.
 				`}`,
 				true
 			)
-			.addField('Location', state.starting.location, true)
+			.addField('Location', state.location, true)
 			.addField(
 				'Grid',
 				codeBlock(
@@ -167,7 +161,7 @@ export class IGuessThisIsItCommand extends Command {
 				true
 			)
 			.addField('Goodbye pile', `${oneLineCommaLists`${goodbyePileComponentNames}`}`, true);
-		return reply(message, { content: `<@${state.starting.players[0].id}> <@${state.starting.players[1].id}>`, embeds: [embed] });
+		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
 	}
 
 	/**
@@ -194,7 +188,7 @@ export class IGuessThisIsItCommand extends Command {
 /**
  * I Guess This Is It game data.
  */
-interface IGuessThisIsItData {
+export interface IGuessThisIsItData {
 	/**
 	 * Private game data that should never be distributed.
 	 */
@@ -267,4 +261,54 @@ interface IGuessThisIsItData {
 		 */
 		readonly locations: string[];
 	};
+}
+
+/**
+ * I Guess This Is It game state.
+ */
+export interface IGuessThisIsItState {
+	/**
+	 * The location where the goodbye is taking place.
+	 */
+	location: string;
+
+	/**
+	 * The players and their play data.
+	 */
+	players: {
+		/**
+		 * The unique ID of a Discord user.
+		 */
+		id: string;
+
+		/**
+		 * The display name of a Discord user.
+		 */
+		displayName: string;
+
+		/**
+		 * The relationship type of the player.
+		 */
+		relationship: string;
+
+		/**
+		 * The reason why this player character is saying goodbye.
+		 */
+		reasonForSayingGoodbye?: string;
+
+		/**
+		 * Story card component IDs the player has in hand.
+		 */
+		hand: string[];
+	}[];
+
+	/**
+	 * The grid of story card component IDs or empty spaces.
+	 */
+	grid: string[];
+
+	/**
+	 * The goodbye pile of story card component IDs.
+	 */
+	goodbyePile: string[];
 }
