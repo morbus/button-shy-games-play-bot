@@ -3,7 +3,6 @@ CREATE TABLE "games" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "created" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" DATETIME NOT NULL,
-    "parentGameId" INTEGER,
     "guildId" TEXT NOT NULL,
     "channelId" TEXT NOT NULL,
     "authorUserId" TEXT NOT NULL,

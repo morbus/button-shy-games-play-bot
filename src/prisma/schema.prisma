@@ -15,7 +15,6 @@ model Game {
   id              Int      @id @default(autoincrement()) /// The unique ID of the game.
   created         DateTime @default(now()) /// The time when the game was created.
   updated         DateTime @updatedAt /// The time when the game was updated.
-  parentGameId    Int? /// The unique ID of an existing game that this one is based on.
   guildId         String /// The unique ID of the Discord guild where the game was created.
   channelId       String /// The unique ID of the Discord channel where the game was created.
   authorUserId    String /// The unique ID of the Discord user who created the game.
