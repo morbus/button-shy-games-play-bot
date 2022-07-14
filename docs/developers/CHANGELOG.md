@@ -15,8 +15,8 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Create state interface documentation?
   https://bobbyhadz.com/blog/typescript-add-property-to-object
   https://bobbyhadz.com/blog/typescript-import-interface-from-another-file
-- Can we cast our game-data JSON into a Typescript typed object too?
-- Use jestjs.io to automate testing of discord bots?
+- State components should be componentId { key: value } for details.
+- Use jestjs.io or vitest.dev to automate testing of discord bots?
 - https://stackoverflow.com/questions/65980280/discord-js-get-member-from-user-id
 - "start game from GAMEID" functionality, for like-minded fun?
 - Will the theme scrollbar the nav when 100 games exist?
