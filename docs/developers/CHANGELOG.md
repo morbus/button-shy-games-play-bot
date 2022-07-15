@@ -22,7 +22,6 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
-- And the "how to take a turn" starter to "start".
 - Plan a game turn. How to handle editable?
   1. (once only) IGTII 1234 draw 1..2 (shows updated grid)
      1. Can be skipped if previous player did a "use apology".

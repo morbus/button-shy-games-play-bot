@@ -57,7 +57,7 @@ export class IGuessThisIsItCommand extends Command {
 	 * @see reroll()
 	 */
 	public async start(message: Message, players: (GuildMember | null)[], gameId: number) {
-		const command = `${this.container.client.options.defaultPrefix}IGTII`;
+		const command = `${this.container.client.options.defaultPrefix}igtii`;
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
@@ -154,7 +154,11 @@ export class IGuessThisIsItCommand extends Command {
 				),
 				true
 			)
-			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true);
+			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true)
+			.addField(
+				`${state.players[0].displayName}, it is your turn!`,
+				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${command} ${createGame.id} draw NUMBER\`.`}`
+			);
 		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
 	}
 

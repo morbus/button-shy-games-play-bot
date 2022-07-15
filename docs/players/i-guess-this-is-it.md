@@ -15,9 +15,9 @@ much we know will be left unsaid._
 * Buy a physical copy of [I Guess This Is It at Button Shy Games](https://buttonshygames.com/products/i-guess-this-is-it-1).
 * Buy a print & play copy of [I Guess This Is It at PNPArcade](https://www.pnparcade.com/products/i-guess-this-is-it).
 
-To play this game using the Button Shy Games Play Bot, all players must own a copy.
+## Prerequisites 
 
-## Game names
+To play this game using the Button Shy Games Play Bot, all players must own a copy.
 
 This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii`.
 
@@ -42,12 +42,11 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii
   </div>
 </div>
 
-| Arguments              | Description                                             |
-|------------------------|---------------------------------------------------------|
-| `@BOTNAME` *or prefix* | **Required.** A bot mention or command prefix.          |
-| `igtii`                | **Required.** The game name you want to play.           |
-| `start`                | **Required.** The game action you want to take.         |
-| `@PLAYER1 @PLAYER2`    | **Required.** The two player mentions this game is for. |
+| Arguments           | Description                                                  |
+|---------------------|--------------------------------------------------------------|
+| `%igtii`            | **Required.** The game name you want to play.                |
+| `start`             | **Required.** The game action you want to take.              |
+| `@PLAYER1 @PLAYER2` | **Required.** The two player mentions to start the game for. |
 
 ## Drawing cards from the Story grid
 
@@ -70,12 +69,9 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii
   </div>
 </div>
 
-| Arguments              | Description                                     |
-|------------------------|-------------------------------------------------|
-| `@BOTNAME` *or prefix* | **Required.** A bot mention or command prefix.  |
-| `igtii`                | **Required.** The game name you want to play.   |
-| `GAMEID`               | **Required.**                                   |
-| `draw`                 | **Required.** The game action you want to take. |
-| `1` *or* `2`           | **Required.**                                   |
-
-### End a game
+| Arguments | Description                                                    |
+|-----------|----------------------------------------------------------------|
+| `%igtii`  | **Required.** The game name you want to play.                  |
+| `GAMEID`  | **Required.** The unique ID that represents your game.         |
+| `draw`    | **Required.** The game action you want to take.                |
+| `NUMBER`  | **Required.** The number of cards to draw (either `1` or `2`). |
