@@ -21,7 +21,7 @@ To play this game using the Button Shy Games Play Bot, all players must own a co
 
 ### Game names
 
-This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii`.
+This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii`.
 
 ### Start a game
 
