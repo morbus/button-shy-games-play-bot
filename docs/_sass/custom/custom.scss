@@ -15,7 +15,7 @@
   border: 1px;
   border-radius: .375rem;
   color: #fff;
-  font-family: Roboto, sans-serif;
+  font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 170%;
 }
@@ -71,4 +71,6 @@
 
 .discord-mention {
   background-color: #414772;
+  border-radius: 3px;
+  padding: 0 2px;
 }

@@ -25,8 +25,6 @@ This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-t
 
 ### Start a game
 
-To start a new game, use:
-
 <div class="discord-messages">
   <div class="discord-message">
     <div class="discord-message-content">
@@ -48,7 +46,7 @@ To start a new game, use:
 
 | Arguments           | Description                                             |
 |---------------------|---------------------------------------------------------|
-| `@BOTNAME`          | **Required.** A bot mention or prefix (default: %).     |
+| `@BOTNAME`          | **Required.** A bot mention or prefix (default: `%`).   |
 | `IGTII`             | **Required.** The game name you want to play.           |
 | `start`             | **Required.** The game action you want to take.         |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for. |
