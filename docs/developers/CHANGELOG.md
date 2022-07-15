@@ -9,13 +9,22 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Base
+
+- Use jestjs.io or vitest.dev for testing?
+- Will the theme scroll the nav when 30+ games exist?
+- gameData.private.component.filter((c) => ['base', 'exp'].includes(c.setId))
+
+### Docs
+
 - Copy Sapphire CSS for Discord-like HTML and use in docs.
 - Write "Why commands without subcommands?" and about fallback.
-- Use jestjs.io or vitest.dev to automate testing of discord bots?
-- https://stackoverflow.com/questions/65980280/discord-js-get-member-from-user-id
-- Will the theme scrollbar the nav when 100 games exist?
-- I Guess This Is It: And the "how to take a turn" starter to "start".
-- I Guess This Is It: Start planning a game turn. How to handle editable?
+- Private and public game data explanation.
+
+### I Guess This Is It
+
+- And the "how to take a turn" starter to "start".
+- Plan a game turn. How to handle editable?
   1. (once only) IGTII 1234 draw 1..2 (shows updated grid)
      1. Can be skipped if previous player did a "use apology".
      2. Rerolling must fail once played. canReroll in state?
@@ -30,11 +39,10 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
      1. Only possible if player did a "use []".
   6. (once only) IGTII 1234 end (ends the current turn)
      1. code would check synchronization check and move GBP? 
-- I Guess This Is It: Start planning how to end a game.
-- I Guess This Is It: Game data documentation.
-- I Guess This Is It: User-chosen setup should be possible.
-- I Guess This Is It: Add "P1" or "P2" somewhere, for two-handed play.
-- base + expansion cards: (gameData.private.storyCards.filter((storyCard) => ['base', 'noWonder'].includes(storyCard.setId)));
+- Plan how to end a game.
+- Game data documentation.
+- User-chosen setup should be possible.
+- Add "P1" or "P2" somewhere, for two-handed play.
 
 ## [0.1.0] - 2022-07
 
