@@ -8,7 +8,7 @@
 }
 
 /**
- * Discord styles cheerfully borrowed from discord.js.guide.
+ * Discord styles cheerfully borrowed from discord.js.guide then tweaked.
  */
 .discord-messages {
   background-color: #36393e;
@@ -24,7 +24,6 @@
   color: #dcddde;
   display: flex;
   flex-direction: column;
-  font-size: .9em;
   margin: 1em 0;
   padding: 1em;
 }
@@ -58,22 +57,18 @@
   align-items: center;
   color: #fff;
   display: inline-flex;
-  font-size: 15px;
 }
 
 .discord-author-username {
-  font-size: 1.1em;
   font-weight: 500;
-  letter-spacing: .5px;
 }
 
 .discord-message-timestamp {
-  color: #72767d;
+  color: #a3a6aa;
   font-size: 12px;
   margin-left: 3px;
 }
 
 .discord-mention {
-  background-color: #5865f2;
-  color: #dee0fc;
+  background-color: #414772;
 }

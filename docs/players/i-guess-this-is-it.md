@@ -36,7 +36,7 @@ To start a new game, use:
       <div class="discord-message-body">
         <div class="discord-message-author">
           <span class="discord-author-info"><span class="discord-author-username">Morbus Iff</span></span>
-          <span class="discord-message-timestamp">07/15/2022</span>
+          <span class="discord-message-timestamp">Today at 3:21 PM</span>
         </div>
         <div class="discord-message-text">
           %IGTII start <span class="discord-mention">@PLAYER1</span> <span class="discord-mention">@PLAYER2</span>
