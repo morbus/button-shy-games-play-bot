@@ -21,7 +21,7 @@ To play this game using the Button Shy Games Play Bot, all players must own a co
 
 ### Game names
 
-This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII`.
+This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII`.
 
 ### Start a game
 
@@ -31,7 +31,7 @@ To start a new game, use:
   <div class="discord-message">
     <div class="discord-message-content">
       <div class="discord-author-avatar">
-        <img src="https://cdn.discordapp.com/embed/avatars/2.png" alt="">
+        <img src="https://cdn.discordapp.com/avatars/210832949904408577/de284c63bedc8a161782e959288bda2b.png" alt="">
       </div>
       <div class="discord-message-body">
         <div class="discord-message-author">
@@ -39,16 +39,12 @@ To start a new game, use:
           <span class="discord-message-timestamp">07/15/2022</span>
         </div>
         <div class="discord-message-text">
-          Pong!
+          %IGTII start @PLAYER1 @PLAYER2
         </div>
       </div>
     </div>
   </div>
 </div>
-
-```
-%IGTII start @PLAYER1 @PLAYER2
-``` 
 
 | Arguments           | Description                                             |
 |---------------------|---------------------------------------------------------|
