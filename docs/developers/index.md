@@ -24,7 +24,9 @@ nav_order: 3
 
 @todo
 
-## Why messages instead of slash commands?
+## Design decisions
+
+### Why messages instead of slash commands?
 
 - PRO: Message commands can do anything with enough effort.
 - CON: Message commands require custom help, validation, etc.
@@ -43,3 +45,7 @@ nav_order: 3
     - `/turn {GAMENAME} {GAMEID} I am a long paragraph for an RPG turn.`
 - **DECISION:** Re-evaluate slash commands after a few games are implemented.
 - **CONSIDER:** Why not implement _both_ messages and slash commands?
+
+### Why messages instead of subcommands?
+
+@todo

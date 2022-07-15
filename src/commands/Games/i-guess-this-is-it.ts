@@ -1,5 +1,5 @@
 import _gameData from '#game-data/i-guess-this-is-it';
-import { componentIds, componentNames } from '#lib/components';
+import { componentNames } from '#lib/components';
 import { addGamePlayers, removeGamePlayers } from '#lib/database';
 import { shuffle } from '#lib/utils';
 import { codeBlock, hyperlink } from '@discordjs/builders';
@@ -11,7 +11,7 @@ import { oneLine, oneLineCommaLists, stripIndents } from 'common-tags';
 import type { GuildMember, Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 
-const gameData: IGuessThisIsItData = _gameData;
+const gameData: IGuessThisIsItGameData = _gameData;
 
 @ApplyOptions<CommandOptions>({
 	name: 'IGuessThisIsIt',
@@ -61,7 +61,7 @@ export class IGuessThisIsItCommand extends Command {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
-		const deck = shuffle(componentIds(gameData.private.storyCards));
+		const deck = shuffle(gameData.private.storyCards);
 		players = shuffle(players);
 
 		if (players.length !== 2) {
@@ -112,12 +112,6 @@ export class IGuessThisIsItCommand extends Command {
 		await removeGamePlayers(createGame.id);
 		await addGamePlayers(createGame.id, players);
 
-		// Shorthand for the embed.
-		const playerOneHandComponentNames = componentNames(state.players[0].hand, gameData.private.storyCards);
-		const playerTwoHandComponentNames = componentNames(state.players[1].hand, gameData.private.storyCards);
-		const gridComponentNames = componentNames(state.grid, gameData.private.storyCards, false);
-		const goodbyePileComponentNames = componentNames(state.goodbyePile, gameData.private.storyCards);
-
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
 			.setTitle(`I Guess This Is It (#${createGame.id})`)
@@ -135,7 +129,7 @@ export class IGuessThisIsItCommand extends Command {
 				stripIndents`${oneLine`
 					Roleplay as ${state.players[0].relationship} saying
 					goodbye because ${state.players[0].reasonForSayingGoodbye}.
-					Your starting hand is ${oneLineCommaLists`${playerOneHandComponentNames}`}.
+					Your starting hand is ${oneLineCommaLists`${componentNames(state.players[0].hand)}`}.
 				`}`,
 				true
 			)
@@ -143,7 +137,7 @@ export class IGuessThisIsItCommand extends Command {
 				state.players[1].displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.players[1].relationship} who is staying.
-					Your starting hand is ${oneLineCommaLists`${playerTwoHandComponentNames}`}.
+					Your starting hand is ${oneLineCommaLists`${componentNames(state.players[1].hand)}`}.
 				`}`,
 				true
 			)
@@ -152,15 +146,15 @@ export class IGuessThisIsItCommand extends Command {
 				'Grid',
 				codeBlock(
 					stripIndents`
-						${gridComponentNames[3]}  ${gridComponentNames[4]}  ${gridComponentNames[11]}
-						${gridComponentNames[2]}  ${gridComponentNames[5]}  ${gridComponentNames[10]}
-						${gridComponentNames[1]}  ${gridComponentNames[6]}  ${gridComponentNames[9]}
-						${gridComponentNames[0]}  ${gridComponentNames[7]}  ${gridComponentNames[8]}
+						${state.grid[3].publicName}  ${state.grid[4].publicName}  ${state.grid[11].publicName}
+						${state.grid[2].publicName}  ${state.grid[5].publicName}  ${state.grid[10].publicName}
+						${state.grid[1].publicName}  ${state.grid[6].publicName}  ${state.grid[9].publicName}
+						${state.grid[0].publicName}  ${state.grid[7].publicName}  ${state.grid[8].publicName}
 					`
 				),
 				true
 			)
-			.addField('Goodbye pile', `${oneLineCommaLists`${goodbyePileComponentNames}`}`, true);
+			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true);
 		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
 	}
 
@@ -186,9 +180,54 @@ export class IGuessThisIsItCommand extends Command {
 }
 
 /**
+ * I Guess This Is It story card game component.
+ */
+export interface IGuessThisIsItStoryCardComponent {
+	/**
+	 * The unique ID of the component.
+	 */
+	readonly id: string;
+
+	/**
+	 * The core or expansion set ID this component belongs to.
+	 */
+	readonly setId: string;
+
+	/**
+	 * The public name that represents this component.
+	 */
+	readonly publicName: string;
+
+	/**
+	 * The private name that represents this component.
+	 */
+	readonly privateName: string;
+
+	/**
+	 * The link type on the top of the story card.
+	 */
+	readonly top: string;
+
+	/**
+	 * The link type on the right of the story card.
+	 */
+	readonly right: string;
+
+	/**
+	 * The link type on the bottom of the story card.
+	 */
+	readonly bottom: string;
+
+	/**
+	 * The link type on the left of the story card.
+	 */
+	readonly left: string;
+}
+
+/**
  * I Guess This Is It game data.
  */
-export interface IGuessThisIsItData {
+export interface IGuessThisIsItGameData {
 	/**
 	 * Private game data that should never be distributed.
 	 */
@@ -198,47 +237,7 @@ export interface IGuessThisIsItData {
 		/**
 		 * The story card components.
 		 */
-		readonly storyCards: {
-			/**
-			 * The unique ID of the component.
-			 */
-			readonly id: string;
-
-			/**
-			 * The core or expansion set ID this component belongs to.
-			 */
-			readonly setId: string;
-
-			/**
-			 * The public name that represents this component.
-			 */
-			readonly publicName: string;
-
-			/**
-			 * The private name that represents this component.
-			 */
-			readonly privateName: string;
-
-			/**
-			 * The link type on the top of the story card.
-			 */
-			readonly top: string;
-
-			/**
-			 * The link type on the right of the story card.
-			 */
-			readonly right: string;
-
-			/**
-			 * The link type on the bottom of the story card.
-			 */
-			readonly bottom: string;
-
-			/**
-			 * The link type on the left of the story card.
-			 */
-			readonly left: string;
-		}[];
+		readonly storyCards: IGuessThisIsItStoryCardComponent[];
 	};
 	/**
 	 * Private game data that can be distributed.
@@ -299,16 +298,16 @@ export interface IGuessThisIsItState {
 		/**
 		 * Story card component IDs the player has in hand.
 		 */
-		hand: string[];
+		hand: IGuessThisIsItStoryCardComponent[];
 	}[];
 
 	/**
 	 * The grid of story card component IDs or empty spaces.
 	 */
-	grid: string[];
+	grid: IGuessThisIsItStoryCardComponent[];
 
 	/**
 	 * The goodbye pile of story card component IDs.
 	 */
-	goodbyePile: string[];
+	goodbyePile: IGuessThisIsItStoryCardComponent[];
 }

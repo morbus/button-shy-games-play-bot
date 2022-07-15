@@ -9,26 +9,20 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-- Add in all the Sapphire and Discord plugins, cos why not?
 - Copy Sapphire CSS for Discord-like HTML and use in docs.
-- Write "Why commands without subcommands?" and talk about fallback.
-- Create state interface documentation?
-  https://bobbyhadz.com/blog/typescript-add-property-to-object
-  https://bobbyhadz.com/blog/typescript-import-interface-from-another-file
-- State components should be componentId { key: value } for details.
+- Write "Why commands without subcommands?" and about fallback.
 - Use jestjs.io or vitest.dev to automate testing of discord bots?
 - https://stackoverflow.com/questions/65980280/discord-js-get-member-from-user-id
-- "start game from GAMEID" functionality, for like-minded fun?
 - Will the theme scrollbar the nav when 100 games exist?
 - I Guess This Is It: And the "how to take a turn" starter to "start".
 - I Guess This Is It: Start planning a game turn. How to handle editable?
-  1. (once only) IGTII 1234 draw [1..2] (shows updated grid)
+  1. (once only) IGTII 1234 draw 1..2 (shows updated grid)
      1. Can be skipped if previous player did a "use apology".
      2. Rerolling must fail once played. canReroll in state?
-  2. (once only) IGTII 1234 play LIE on [memory|wish|apology|recognition]
+  2. (once only) IGTII 1234 play LIE on memory|wish|apology|recognition
      1. Must be attached to previous card (can validate this).   
   3. (multiple times) IGTII 1234 narrate []
-  4. (once only) IGTII 1234 use [memory|wish|apology|recognition]
+  4. (once only) IGTII 1234 use memory|wish|apology|recognition
      1. memory allows the whole cycle after draw to begin again.
      2. wish allows partner to "pass" a card.
      3. recognition allows current player to "pass" a card.
