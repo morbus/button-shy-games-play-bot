@@ -1,6 +1,72 @@
 
-// Two line title needs more breathing room.
+/**
+ * Two line title needs more breathing room.
+ */
 .site-header {
   height: 90px;
   max-height: 90px;
+}
+
+/**
+ * Discord styles cheerfully borrowed from discord.js.guide.
+ */
+.discord-messages {
+  background-color: #36393e;
+  border: 1px;
+  border-radius: .375rem;
+  color: #fff;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 170%;
+}
+
+.discord-message {
+  color: #dcddde;
+  display: flex;
+  flex-direction: column;
+  font-size: .9em;
+  margin: 1em 0;
+  padding: .25em 1em 0
+}
+
+.discord-message:hover {
+  background-color: #32353b
+}
+
+.discord-message .discord-message-content {
+  display: flex;
+  font-weight: 400;
+  line-height: 160%;
+  overflow-wrap: anywhere;
+  width: 100%;
+}
+
+.discord-message .discord-author-avatar {
+  margin-right: 16px;
+  margin-top: 1px;
+  min-width: 40px;
+}
+
+.discord-message .discord-author-avatar img {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}
+
+.discord-message .discord-message-body {
+  position: relative;
+  width: 100%;
+}
+
+.discord-message .discord-author-info {
+  align-items: center;
+  color: #fff;
+  display: inline-flex;
+  font-size: 15px;
+}
+
+.discord-message .discord-message-content .discord-message-timestamp {
+  color: #72767d;
+  font-size: 12px;
+  margin-left: 3px;
 }

@@ -27,6 +27,19 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII
 
 To start a new game, use:
 
+<div class="discord-messages">
+  <div class="discord-message">
+    <div class="discord-message-content">
+      <div class="discord-author-avatar"><img src="https://cdn.discordapp.com/embed/avatars/2.png" alt=""></div>
+      <div class="discord-message-body">
+        <span class="discord-author-info"><span class="discord-author-username">Guide Bot</span></span>
+        <span class="discord-message-timestamp">07/15/2022</span>
+        Pong!
+      </div>
+    </div>
+  </div>
+</div>
+
 ```
 %IGTII start @PLAYER1 @PLAYER2
 ``` 
