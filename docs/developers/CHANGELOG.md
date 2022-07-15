@@ -17,7 +17,6 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Docs
 
-- Copy Sapphire CSS for Discord-like HTML and use in docs.
 - Write "Why commands without subcommands?" and about fallback.
 - Private and public game data explanation.
 
