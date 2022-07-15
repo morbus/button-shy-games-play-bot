@@ -48,7 +48,7 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii
 | `start`             | **Required.** The game action you want to take.              |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions to start the game for. |
 
-## Drawing cards from the Story grid
+## Drawing Story cards from the grid
 
 <div class="discord-messages">
   <div class="discord-message">
