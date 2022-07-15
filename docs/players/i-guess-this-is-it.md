@@ -21,7 +21,7 @@ To play this game using the Button Shy Games Play Bot, all players must own a co
 
 ### Game names
 
-This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-this-is-it`, or `IGTII`.
+This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii`.
 
 ### Start a game
 
@@ -37,19 +37,19 @@ This game can be referenced (case-insensitively) as `IGuessThisIsIt`, `i-guess-t
           <span class="discord-message-timestamp">Today at 3:21 PM</span>
         </div>
         <div class="discord-message-text">
-          %IGTII start <span class="discord-mention">@PLAYER1</span> <span class="discord-mention">@PLAYER2</span>
+          %igtii start <span class="discord-mention">@PLAYER1</span> <span class="discord-mention">@PLAYER2</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-| Arguments           | Description                                             |
-|---------------------|---------------------------------------------------------|
-| `@BOTNAME`          | **Required.** A bot mention or prefix (default: `%`).   |
-| `IGTII`             | **Required.** The game name you want to play.           |
-| `start`             | **Required.** The game action you want to take.         |
-| `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for. |
+| Arguments              | Description                                             |
+|------------------------|---------------------------------------------------------|
+| `@BOTNAME` *or prefix* | **Required.** A bot mention or command prefix.          |
+| `igtii`                | **Required.** The game name you want to play.           |
+| `start`                | **Required.** The game action you want to take.         |
+| `@PLAYER1 @PLAYER2`    | **Required.** The two player mentions this game is for. |
 
 ### Take a turn in a game
 
