@@ -39,7 +39,7 @@ To start a new game, use:
           <span class="discord-message-timestamp">07/15/2022</span>
         </div>
         <div class="discord-message-text">
-          %IGTII start @PLAYER1 @PLAYER2
+          %IGTII start <span class="discord-mention">@PLAYER1</span> <span class="discord-mention">@PLAYER2</span>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@ To start a new game, use:
 
 | Arguments           | Description                                             |
 |---------------------|---------------------------------------------------------|
-| `@BOTNAME`          | **Required.** A bot mention or prefix.                  |
+| `@BOTNAME`          | **Required.** A bot mention or prefix (default: %).     |
 | `IGTII`             | **Required.** The game name you want to play.           |
 | `start`             | **Required.** The game action you want to take.         |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions this game is for. |
