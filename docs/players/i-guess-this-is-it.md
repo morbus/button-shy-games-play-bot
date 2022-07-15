@@ -30,11 +30,17 @@ To start a new game, use:
 <div class="discord-messages">
   <div class="discord-message">
     <div class="discord-message-content">
-      <div class="discord-author-avatar"><img src="https://cdn.discordapp.com/embed/avatars/2.png" alt=""></div>
+      <div class="discord-author-avatar">
+        <img src="https://cdn.discordapp.com/embed/avatars/2.png" alt="">
+      </div>
       <div class="discord-message-body">
-        <span class="discord-author-info"><span class="discord-author-username">Guide Bot</span></span>
-        <span class="discord-message-timestamp">07/15/2022</span>
-        Pong!
+        <div class="discord-message-author">
+          <span class="discord-author-info"><span class="discord-author-username">Morbus Iff</span></span>
+          <span class="discord-message-timestamp">07/15/2022</span>
+        </div>
+        <div class="discord-message-text">
+          Pong!
+        </div>
       </div>
     </div>
   </div>
