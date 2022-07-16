@@ -22,14 +22,15 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
+- Access check for command: players, author, or owner only.
 - Plan a game turn. How to handle editable?
   1. (once only) IGTII 1234 draw 1..2 (shows updated grid)
      1. Can be skipped if previous player did a "use apology".
      2. Rerolling must fail once played. canReroll in state?
-  2. (once only) IGTII 1234 play LIE on memory|wish|apology|recognition
+  2. (once only) IGTII 1234 play LIE on memory/wish/apology/recognition
      1. Must be attached to previous card (can validate this).   
   3. (multiple times) IGTII 1234 narrate []
-  4. (once only) IGTII 1234 use memory|wish|apology|recognition
+  4. (once only) IGTII 1234 use memory/wish/apology/recognition
      1. memory allows the whole cycle after draw to begin again.
      2. wish allows partner to "pass" a card.
      3. recognition allows current player to "pass" a card.

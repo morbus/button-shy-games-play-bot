@@ -20,32 +20,37 @@ const gameData: IGuessThisIsItGameData = _gameData;
 })
 export class IGuessThisIsItCommand extends Command {
 	/**
-	 * Master router for all "IGuessThisIsIt" actions.
+	 * Master router for all I Guess This Is It actions.
 	 *
 	 *  Example command:
 	 *    @BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
 	 */
-	public override async messageRun(message: Message, args: Args) {
+	public override async messageRun(message: Message, args: Args): Promise<Message> {
 		this.container.logger.info(message.content);
 		const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
 
 		if (gameData.private.storyCards.length < 16) {
-			return reply(message, `:thumbsdown: I Guess This Is It does not have 16 Story cards defined.`);
+			return reply(message, `I Guess This Is It does not have 16 Story cards defined.`);
 		}
 
 		switch (action) {
 			case 'start': {
-				return this.start(message, players, gameId);
+				return this.start(gameId, players, message);
 			}
 
 			case 'reroll': {
-				return this.reroll(message, players, gameId);
+				return this.reroll(gameId, players, message);
+			}
+
+			case 'draw': {
+				const numberToDraw = await args.pick('number').catch(() => 1);
+				return this.draw(gameId, numberToDraw, message);
 			}
 		}
 
-		return null;
+		return reply(message, `See ${process.env.README_I_GUESS_THIS_IS_IT!}`);
 	}
 
 	/**
@@ -56,7 +61,7 @@ export class IGuessThisIsItCommand extends Command {
 	 *
 	 * @see reroll()
 	 */
-	public async start(message: Message, players: (GuildMember | null)[], gameId: number) {
+	public async start(gameId: number, players: (GuildMember | null)[], message: Message): Promise<Message> {
 		const command = `${this.container.client.options.defaultPrefix}igtii`;
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
@@ -66,8 +71,8 @@ export class IGuessThisIsItCommand extends Command {
 
 		if (players.length !== 2) {
 			return gameId === 0
-				? reply(message, `:thumbsdown: I Guess This Is It requires two players: \`${command} start @PLAYER1 @PLAYER2\`.`)
-				: reply(message, `:thumbsdown: I Guess This Is It requires two players: \`${command} ${gameId} reroll @PLAYER1 @PLAYER2\`.`);
+				? reply(message, `I Guess This Is It requires two players: \`${command} start @PLAYER1 @PLAYER2\`.`)
+				: reply(message, `I Guess This Is It requires two players: \`${command} ${gameId} reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
 		const state: IGuessThisIsItState = {
@@ -172,14 +177,24 @@ export class IGuessThisIsItCommand extends Command {
 	 *
 	 * @see start()
 	 */
-	public async reroll(message: Message, players: (GuildMember | null)[], gameId: number) {
+	public async reroll(gameId: number, players: (GuildMember | null)[], message: Message): Promise<Message> {
 		const command = `${this.container.client.options.defaultPrefix}IGTII`;
 
 		if (gameId === 0) {
-			return reply(message, `:thumbsdown: I Guess This Is It \`reroll\` requires a game ID: \`${command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
+			return reply(message, `I Guess This Is It \`reroll\` requires a game ID: \`${command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
-		return this.start(message, players, gameId);
+		return this.start(gameId, players, message);
+	}
+
+	/**
+	 *
+	 */
+	public async draw(gameId: number, numberToDraw: number, message: Message): Promise<Message> {
+		console.dir(gameId);
+		console.dir(numberToDraw);
+		console.dir(message);
+		return reply(message, 'inside draw');
 	}
 }
 
