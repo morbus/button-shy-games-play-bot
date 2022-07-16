@@ -35,20 +35,21 @@ export class IGuessThisIsItCommand extends Command {
 		this.container.logger.info(message.content);
 		const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
-		const players = await args.repeat('member').catch(() => [message.member]);
 		const game = await this.container.prisma.game.findUnique({ where: { id: gameId } });
 
 		if (gameData.private.storyCards.length < 16) {
 			return reply(message, `I Guess This Is It does not have 16 Story cards defined.`);
 		}
 
-		switch (action) {
-			case 'start': {
-				return this.start(game, players, message);
-			}
+		if (game === null && action !== 'start' && action !== 'help') {
+			return reply(message, `I Guess This Is It \`${action}\` requires a game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
+		}
 
+		switch (action) {
+			case 'start':
 			case 'reroll': {
-				return this.reroll(game, players, message);
+				const players = await args.repeat('member').catch(() => [message.member]);
+				return this.start(game, players, message);
 			}
 
 			case 'draw': {
@@ -160,24 +161,6 @@ export class IGuessThisIsItCommand extends Command {
 				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`}`
 			);
 		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
-	}
-
-	/**
-	 * Reroll (regenerate, re-setup, etc.) an already-setup game.
-	 *
-	 * This is all handled by start() when passed a non-null game.
-	 *
-	 * Example commands:
-	 *   %igtii GAMEID reroll @PLAYER1 @PLAYER2
-	 *
-	 * @see start()
-	 */
-	public async reroll(game: Game | null, players: (GuildMember | null)[], message: Message): Promise<Message> {
-		if (game === null) {
-			return reply(message, `I Guess This Is It \`reroll\` requires a game ID: \`${this.command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
-		}
-
-		return this.start(game, players, message);
 	}
 
 	/**
