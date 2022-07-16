@@ -23,7 +23,7 @@ export class IGuessThisIsItCommand extends Command {
 	 * Master router for all I Guess This Is It actions.
 	 *
 	 *  Example command:
-	 *    @BOTNAME IGuessThisIsIt [GAMEID] ACTION [PLAYERS] [OPTIONS]
+	 *    %igtii [GAMEID] ACTION [PLAYERS] [OPTIONS]
 	 */
 	public override async messageRun(message: Message, args: Args): Promise<Message> {
 		this.container.logger.info(message.content);
@@ -57,7 +57,7 @@ export class IGuessThisIsItCommand extends Command {
 	 * Start a game.
 	 *
 	 * Example commands:
-	 *   @BOTNAME IGuessThisIsIt start @PLAYER1 @PLAYER2
+	 *   %igtii start @PLAYER1 @PLAYER2
 	 *
 	 * @see reroll()
 	 */
@@ -147,18 +147,7 @@ export class IGuessThisIsItCommand extends Command {
 				true
 			)
 			.addField('Location', state.location, true)
-			.addField(
-				'Grid',
-				codeBlock(
-					stripIndents`
-						${state.grid[3].publicName}  ${state.grid[4].publicName}  ${state.grid[11].publicName}
-						${state.grid[2].publicName}  ${state.grid[5].publicName}  ${state.grid[10].publicName}
-						${state.grid[1].publicName}  ${state.grid[6].publicName}  ${state.grid[9].publicName}
-						${state.grid[0].publicName}  ${state.grid[7].publicName}  ${state.grid[8].publicName}
-					`
-				),
-				true
-			)
+			.addField('Grid', this.renderGrid(state), true)
 			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true)
 			.addField(
 				`${state.players[0].displayName}, it is your turn!`,
@@ -173,12 +162,12 @@ export class IGuessThisIsItCommand extends Command {
 	 * This is all handled by start() when given a non-zero gameId.
 	 *
 	 * Example commands:
-	 *   @BOTNAME IGuessThisIsIt GAMEID reroll @PLAYER1 @PLAYER2
+	 *   %igtii GAMEID reroll @PLAYER1 @PLAYER2
 	 *
 	 * @see start()
 	 */
 	public async reroll(gameId: number, players: (GuildMember | null)[], message: Message): Promise<Message> {
-		const command = `${this.container.client.options.defaultPrefix}IGTII`;
+		const command = `${this.container.client.options.defaultPrefix}igtii`;
 
 		if (gameId === 0) {
 			return reply(message, `I Guess This Is It \`reroll\` requires a game ID: \`${command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
@@ -188,13 +177,37 @@ export class IGuessThisIsItCommand extends Command {
 	}
 
 	/**
+	 * Draw 1 or 2 Story cards from the grid.
 	 *
+	 * Example commands:
+	 *   %igtii GAMEID draw NUMBER
 	 */
 	public async draw(gameId: number, numberToDraw: number, message: Message): Promise<Message> {
 		console.dir(gameId);
 		console.dir(numberToDraw);
 		console.dir(message);
 		return reply(message, 'inside draw');
+	}
+
+	/**
+	 * Render a 12-cell grid with Story cards, spaces, and a Goodbye pile.
+	 */
+	public renderGrid(state: IGuessThisIsItState): string {
+		let constructedGrid: IGuessThisIsItStoryCardComponent[] | { publicName: string }[] = [];
+
+		// 12 Story cards is a new game.
+		if (state.grid.length === 12) {
+			constructedGrid = state.grid;
+		}
+
+		return codeBlock(
+			stripIndents`
+				${constructedGrid[3].publicName}  ${constructedGrid[4].publicName}  ${constructedGrid[11].publicName}
+				${constructedGrid[2].publicName}  ${constructedGrid[5].publicName}  ${constructedGrid[10].publicName}
+				${constructedGrid[1].publicName}  ${constructedGrid[6].publicName}  ${constructedGrid[9].publicName}
+				${constructedGrid[0].publicName}  ${constructedGrid[7].publicName}  ${constructedGrid[8].publicName}
+			`
+		);
 	}
 }
 
