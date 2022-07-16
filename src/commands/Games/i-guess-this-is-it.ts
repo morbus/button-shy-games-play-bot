@@ -3,6 +3,7 @@ import { componentNames } from '#lib/components';
 import { addGamePlayers, removeGamePlayers } from '#lib/database';
 import { shuffle } from '#lib/utils';
 import { codeBlock, hyperlink } from '@discordjs/builders';
+import type { Game } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { Command, CommandOptions } from '@sapphire/framework';
@@ -20,6 +21,11 @@ const gameData: IGuessThisIsItGameData = _gameData;
 })
 export class IGuessThisIsItCommand extends Command {
 	/**
+	 * The shortest command with the default bot prefix.
+	 */
+	public command = `${this.container.client.options.defaultPrefix}igtii`;
+
+	/**
 	 * Master router for all I Guess This Is It actions.
 	 *
 	 *  Example command:
@@ -30,6 +36,7 @@ export class IGuessThisIsItCommand extends Command {
 		const gameId = await args.pick('number').catch(() => 0);
 		const action = await args.pick('string').catch(() => 'help');
 		const players = await args.repeat('member').catch(() => [message.member]);
+		const game = await this.container.prisma.game.findUnique({ where: { id: gameId } });
 
 		if (gameData.private.storyCards.length < 16) {
 			return reply(message, `I Guess This Is It does not have 16 Story cards defined.`);
@@ -37,20 +44,20 @@ export class IGuessThisIsItCommand extends Command {
 
 		switch (action) {
 			case 'start': {
-				return this.start(gameId, players, message);
+				return this.start(game, players, message);
 			}
 
 			case 'reroll': {
-				return this.reroll(gameId, players, message);
+				return this.reroll(game, players, message);
 			}
 
 			case 'draw': {
 				const numberToDraw = await args.pick('number').catch(() => 1);
-				return this.draw(gameId, numberToDraw, message);
+				return this.draw(game, numberToDraw, message);
 			}
 		}
 
-		return reply(message, `See ${process.env.README_I_GUESS_THIS_IS_IT!}`);
+		return reply(message, `See ${process.env.README_I_GUESS_THIS_IS_IT}`);
 	}
 
 	/**
@@ -61,8 +68,7 @@ export class IGuessThisIsItCommand extends Command {
 	 *
 	 * @see reroll()
 	 */
-	public async start(gameId: number, players: (GuildMember | null)[], message: Message): Promise<Message> {
-		const command = `${this.container.client.options.defaultPrefix}igtii`;
+	public async start(game: Game | null, players: (GuildMember | null)[], message: Message): Promise<Message> {
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
@@ -70,9 +76,9 @@ export class IGuessThisIsItCommand extends Command {
 		players = shuffle(players);
 
 		if (players.length !== 2) {
-			return gameId === 0
-				? reply(message, `I Guess This Is It requires two players: \`${command} start @PLAYER1 @PLAYER2\`.`)
-				: reply(message, `I Guess This Is It requires two players: \`${command} ${gameId} reroll @PLAYER1 @PLAYER2\`.`);
+			return game === null
+				? reply(message, `I Guess This Is It requires two players: \`${this.command} start @PLAYER1 @PLAYER2\`.`)
+				: reply(message, `I Guess This Is It requires two players: \`${this.command} ${game.id} reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
 		const state: IGuessThisIsItState = {
@@ -96,8 +102,8 @@ export class IGuessThisIsItCommand extends Command {
 			goodbyePile: deck.splice(0, 2)
 		};
 
-		const game = await this.container.prisma.game.upsert({
-			where: { id: gameId },
+		game = await this.container.prisma.game.upsert({
+			where: { id: game ? game.id : 0 },
 			update: {
 				waitingOnUserId: state.players[0].id,
 				state: JSON.stringify(state)
@@ -125,7 +131,7 @@ export class IGuessThisIsItCommand extends Command {
 				stripIndents`${oneLine`
 					*Game setup is complete. Story cards are identified by their first few letters.
 					If the randomized prompts create an uncomfortable or unwanted setup, reroll with
-					\`${command} ${game.id} reroll @PLAYER1 @PLAYER2\`.
+					\`${this.command} ${game.id} reroll @PLAYER1 @PLAYER2\`.
 					${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
 			)
@@ -151,7 +157,7 @@ export class IGuessThisIsItCommand extends Command {
 			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true)
 			.addField(
 				`${state.players[0].displayName}, it is your turn!`,
-				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${command} ${game.id} draw NUMBER\`.`}`
+				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`}`
 			);
 		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
 	}
@@ -159,21 +165,19 @@ export class IGuessThisIsItCommand extends Command {
 	/**
 	 * Reroll (regenerate, re-setup, etc.) an already-setup game.
 	 *
-	 * This is all handled by start() when given a non-zero gameId.
+	 * This is all handled by start() when passed a non-null game.
 	 *
 	 * Example commands:
 	 *   %igtii GAMEID reroll @PLAYER1 @PLAYER2
 	 *
 	 * @see start()
 	 */
-	public async reroll(gameId: number, players: (GuildMember | null)[], message: Message): Promise<Message> {
-		const command = `${this.container.client.options.defaultPrefix}igtii`;
-
-		if (gameId === 0) {
-			return reply(message, `I Guess This Is It \`reroll\` requires a game ID: \`${command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
+	public async reroll(game: Game | null, players: (GuildMember | null)[], message: Message): Promise<Message> {
+		if (game === null) {
+			return reply(message, `I Guess This Is It \`reroll\` requires a game ID: \`${this.command} GAMEID reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
-		return this.start(gameId, players, message);
+		return this.start(game, players, message);
 	}
 
 	/**
@@ -182,8 +186,8 @@ export class IGuessThisIsItCommand extends Command {
 	 * Example commands:
 	 *   %igtii GAMEID draw NUMBER
 	 */
-	public async draw(gameId: number, numberToDraw: number, message: Message): Promise<Message> {
-		console.dir(gameId);
+	public async draw(game: Game | null, numberToDraw: number, message: Message): Promise<Message> {
+		console.dir(game);
 		console.dir(numberToDraw);
 		console.dir(message);
 		return reply(message, 'inside draw');
