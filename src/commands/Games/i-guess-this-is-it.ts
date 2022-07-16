@@ -96,7 +96,7 @@ export class IGuessThisIsItCommand extends Command {
 			goodbyePile: deck.splice(0, 2)
 		};
 
-		const createGame = await this.container.prisma.game.upsert({
+		const game = await this.container.prisma.game.upsert({
 			where: { id: gameId },
 			update: {
 				waitingOnUserId: state.players[0].id,
@@ -114,18 +114,18 @@ export class IGuessThisIsItCommand extends Command {
 		});
 
 		// Rerolls might change the players.
-		await removeGamePlayers(createGame.id);
-		await addGamePlayers(createGame.id, players);
+		await removeGamePlayers(game);
+		await addGamePlayers(game, players);
 
 		const embed = new MessageEmbed()
 			.setColor('#d8d2cd')
-			.setTitle(`I Guess This Is It (#${createGame.id})`)
+			.setTitle(`I Guess This Is It (#${game.id})`)
 			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
 			.setDescription(
 				stripIndents`${oneLine`
 					*Game setup is complete. Story cards are identified by their first few letters.
 					If the randomized prompts create an uncomfortable or unwanted setup, reroll with
-					\`${command} ${createGame.id} reroll @PLAYER1 @PLAYER2\`.
+					\`${command} ${game.id} reroll @PLAYER1 @PLAYER2\`.
 					${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
 			)
@@ -151,7 +151,7 @@ export class IGuessThisIsItCommand extends Command {
 			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true)
 			.addField(
 				`${state.players[0].displayName}, it is your turn!`,
-				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${command} ${createGame.id} draw NUMBER\`.`}`
+				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${command} ${game.id} draw NUMBER\`.`}`
 			);
 		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
 	}
