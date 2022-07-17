@@ -1,6 +1,6 @@
 import _gameData from '#game-data/i-guess-this-is-it';
 import { componentNames } from '#lib/components';
-import { addGamePlayers, removeGamePlayers } from '#lib/database';
+import { addGamePlayers, isValidGameUser, removeGamePlayers } from '#lib/database';
 import { shuffle } from '#lib/utils';
 import { codeBlock, hyperlink } from '@discordjs/builders';
 import type { Game } from '@prisma/client';
@@ -43,6 +43,10 @@ export class IGuessThisIsItCommand extends Command {
 
 		if (game === null && action !== 'start' && action !== 'help') {
 			return reply(message, `I Guess This Is It \`${action}\` requires a game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
+		}
+
+		if (game !== null && !isValidGameUser(game, message.member!.id)) {
+			return reply(message, `You do not appear to be a valid owner or player of this game.`);
 		}
 
 		switch (action) {
