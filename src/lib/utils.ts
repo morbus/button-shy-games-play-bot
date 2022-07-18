@@ -1,4 +1,11 @@
 /**
+ * Turn an array of players into an array of user mentions.
+ */
+export function playersToMentions(players: any[]): string[] {
+	return players.map((player) => `<@${player.id}>`);
+}
+
+/**
  * Shuffle an array using the Durstenfeld algorithm, based on Fisher–Yates.
  *
  * Copied from https://github.com/sindresorhus/array-shuffle so we needn't

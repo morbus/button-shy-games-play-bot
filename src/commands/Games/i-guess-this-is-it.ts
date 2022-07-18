@@ -1,7 +1,7 @@
 import _gameData from '#game-data/i-guess-this-is-it';
 import { componentNames } from '#lib/components';
 import { addGamePlayers, isValidGameUser, removeGamePlayers } from '#lib/database';
-import { shuffle } from '#lib/utils';
+import { playersToMentions, shuffle } from '#lib/utils';
 import { codeBlock, hyperlink } from '@discordjs/builders';
 import type { Game } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -134,7 +134,7 @@ export class IGuessThisIsItCommand extends Command {
 			}
 		});
 
-		// Rerolls might change the players.
+		// Rerolls might change players.
 		await removeGamePlayers(game);
 		await addGamePlayers(game, players);
 
@@ -169,12 +169,12 @@ export class IGuessThisIsItCommand extends Command {
 			)
 			.addField('Location', state.location, true)
 			.addField('Grid', this.renderGrid(state), true)
-			.addField('Goodbye pile', `${oneLineCommaLists`${componentNames(state.goodbyePile)}`}`, true)
+			.addField('Goodbye pile', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
 			.addField(
 				`${state.players[0].displayName}, it is your turn!`,
-				stripIndents`${oneLine`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`}`
+				`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`
 			);
-		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>`, embeds: [embed] });
+		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
 	}
 
 	/**
@@ -205,12 +205,13 @@ export class IGuessThisIsItCommand extends Command {
 		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
 		state.players[playerIndex].hand.push(...state.grid.splice(0, numberToDraw));
 
+		// Save game state without changing the current player.
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
 
 		// todo start logging.
 		// todo show grid status.
 
-		return reply(message, 'inside draw');
+		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>` });
 	}
 
 	/**
