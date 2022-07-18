@@ -95,6 +95,8 @@ export class IGuessThisIsItCommand extends Command {
 
 		const state: IGuessThisIsItGameState = {
 			canReroll: true,
+			turn: 1,
+			step: 1,
 			location,
 			players: [
 				{
@@ -182,16 +184,22 @@ export class IGuessThisIsItCommand extends Command {
 	 *   %igtii GAMEID draw NUMBER
 	 */
 	public async draw(game: Game, numberToDraw: number, message: Message): Promise<Message> {
+		const state: IGuessThisIsItGameState = JSON.parse(game.state);
+
 		if (numberToDraw < 1 || numberToDraw > 2) {
 			return reply(message, 'Players may only draw 1 or 2 Story cards from the grid.');
 		}
 
 		if (game.currentPlayerId !== message.author.id) {
-			return reply(message, 'It is not your turn.');
+			return reply(message, 'It is not your turn yet. Patience!');
 		}
 
-		const state: IGuessThisIsItGameState = JSON.parse(game.state);
+		if (state.step !== 1) {
+			return reply(message, `The current turn is on step ${state.step}, not step 1.`);
+		}
+
 		state.canReroll = false; // A turn has started, so no more rerolls.
+		state.step = 2; // After drawing comes step 2: play a story card.
 
 		// Move 1 or 2 Story cards from the grid to the player's hand.
 		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
@@ -199,9 +207,8 @@ export class IGuessThisIsItCommand extends Command {
 
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
 
-		// add step tracker.
-		// start logging.
-		// show grid status.
+		// todo start logging.
+		// todo show grid status.
 
 		return reply(message, 'inside draw');
 	}
@@ -279,6 +286,16 @@ export interface IGuessThisIsItGameState {
 	 * The location where the goodbye is taking place.
 	 */
 	location: string;
+
+	/**
+	 * The turn number, starting at 1.
+	 */
+	turn: number;
+
+	/**
+	 * The step number of the current turn (1 through 5).
+	 */
+	step: number;
 
 	/**
 	 * The players and their play data.
