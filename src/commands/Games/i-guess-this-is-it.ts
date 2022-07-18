@@ -46,7 +46,7 @@ export class IGuessThisIsItCommand extends Command {
 		}
 
 		if (game !== null && !isValidGameUser(game, message.member!.id)) {
-			return reply(message, `You do not appear to be a valid owner or player of this game.`);
+			return reply(message, `Only valid owners or players may interact with this game.`);
 		}
 
 		switch (action) {
@@ -58,7 +58,7 @@ export class IGuessThisIsItCommand extends Command {
 
 			case 'draw': {
 				const numberToDraw = await args.pick('number').catch(() => 1);
-				return this.draw(game, numberToDraw, message);
+				return this.draw(game!, numberToDraw, message);
 			}
 		}
 
@@ -86,7 +86,15 @@ export class IGuessThisIsItCommand extends Command {
 				: reply(message, `I Guess This Is It requires two players: \`${this.command} ${game.id} reroll @PLAYER1 @PLAYER2\`.`);
 		}
 
-		const state: IGuessThisIsItState = {
+		if (game !== null) {
+			const state: IGuessThisIsItGameState = JSON.parse(game.state);
+			if (!state.canReroll) {
+				return reply(message, 'This game has already started and can no longer be rerolled.');
+			}
+		}
+
+		const state: IGuessThisIsItGameState = {
+			canReroll: true,
 			location,
 			players: [
 				{
@@ -110,16 +118,16 @@ export class IGuessThisIsItCommand extends Command {
 		game = await this.container.prisma.game.upsert({
 			where: { id: game ? game.id : 0 },
 			update: {
-				waitingOnUserId: state.players[0].id,
+				currentPlayerId: state.players[0].id,
 				state: JSON.stringify(state)
 			},
 			create: {
 				guildId: message.guildId!,
 				channelId: message.channelId!,
-				authorUserId: message.author.id,
+				authorId: message.author.id,
 				message: message.content,
 				command: 'i-guess-this-is-it',
-				waitingOnUserId: state.players[0].id,
+				currentPlayerId: state.players[0].id,
 				state: JSON.stringify(state)
 			}
 		});
@@ -173,17 +181,35 @@ export class IGuessThisIsItCommand extends Command {
 	 * Example commands:
 	 *   %igtii GAMEID draw NUMBER
 	 */
-	public async draw(game: Game | null, numberToDraw: number, message: Message): Promise<Message> {
-		console.dir(game);
-		console.dir(numberToDraw);
-		console.dir(message);
+	public async draw(game: Game, numberToDraw: number, message: Message): Promise<Message> {
+		if (numberToDraw < 1 || numberToDraw > 2) {
+			return reply(message, 'Players may only draw 1 or 2 Story cards from the grid.');
+		}
+
+		if (game.currentPlayerId !== message.author.id) {
+			return reply(message, 'It is not your turn.');
+		}
+
+		const state: IGuessThisIsItGameState = JSON.parse(game.state);
+		state.canReroll = false; // A turn has started, so no more rerolls.
+
+		// Move 1 or 2 Story cards from the grid to the player's hand.
+		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
+		state.players[playerIndex].hand.push(...state.grid.splice(0, numberToDraw));
+
+		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
+
+		// add step tracker.
+		// start logging.
+		// show grid status.
+
 		return reply(message, 'inside draw');
 	}
 
 	/**
 	 * Render a 12-cell grid with Story cards, spaces, and a Goodbye pile.
 	 */
-	public renderGrid(state: IGuessThisIsItState): string {
+	public renderGrid(state: IGuessThisIsItGameState): string {
 		let constructedGrid: IGuessThisIsItStoryCardComponent[] | { publicName: string }[] = [];
 
 		// 12 Story cards is a new game.
@@ -200,6 +226,104 @@ export class IGuessThisIsItCommand extends Command {
 			`
 		);
 	}
+}
+
+/**
+ * I Guess This Is It game data.
+ */
+export interface IGuessThisIsItGameData {
+	/**
+	 * Private game data that should never be distributed.
+	 */
+	readonly private: {
+		readonly __WARNING__: string;
+
+		/**
+		 * The story card components.
+		 */
+		readonly storyCards: IGuessThisIsItStoryCardComponent[];
+	};
+	/**
+	 * Private game data that can be distributed.
+	 */
+	readonly public: {
+		/**
+		 * Relationship types for each player, formatted to fit into
+		 * "Roleplay as [relationship] saying goodbye because [reason]".
+		 */
+		readonly relationships: string[][];
+
+		/**
+		 * Reasons the players are saying goodbye, formatted to fit into
+		 * "Roleplay as [relationship] saying goodbye because [reason]".
+		 */
+		readonly reasonsForSayingGoodbye: string[];
+
+		/**
+		 * Locations where the goodbye is taking place.
+		 */
+		readonly locations: string[];
+	};
+}
+
+/**
+ * I Guess This Is It game state.
+ */
+export interface IGuessThisIsItGameState {
+	/**
+	 * A boolean indicating whether the game can be rerolled.
+	 */
+	canReroll: boolean;
+
+	/**
+	 * The location where the goodbye is taking place.
+	 */
+	location: string;
+
+	/**
+	 * The players and their play data.
+	 */
+	players: IGuessThisIsItPlayer[];
+
+	/**
+	 * The grid of story card components.
+	 */
+	grid: IGuessThisIsItStoryCardComponent[];
+
+	/**
+	 * The goodbye pile of story card components.
+	 */
+	goodbyePile: IGuessThisIsItStoryCardComponent[];
+}
+
+/**
+ * I Guess This Is It player data.
+ */
+export interface IGuessThisIsItPlayer {
+	/**
+	 * The unique ID of a Discord user.
+	 */
+	id: string;
+
+	/**
+	 * The display name of a Discord user.
+	 */
+	displayName: string;
+
+	/**
+	 * The relationship type of the player.
+	 */
+	relationship: string;
+
+	/**
+	 * The reason why this player character is saying goodbye.
+	 */
+	reasonForSayingGoodbye?: string;
+
+	/**
+	 * Story card component the player has in hand.
+	 */
+	hand: IGuessThisIsItStoryCardComponent[];
 }
 
 /**
@@ -245,92 +369,4 @@ export interface IGuessThisIsItStoryCardComponent {
 	 * The link type on the left of the story card.
 	 */
 	readonly left: string;
-}
-
-/**
- * I Guess This Is It game data.
- */
-export interface IGuessThisIsItGameData {
-	/**
-	 * Private game data that should never be distributed.
-	 */
-	readonly private: {
-		readonly __WARNING__: string;
-
-		/**
-		 * The story card components.
-		 */
-		readonly storyCards: IGuessThisIsItStoryCardComponent[];
-	};
-	/**
-	 * Private game data that can be distributed.
-	 */
-	readonly public: {
-		/**
-		 * Relationship types for each player, formatted to fit into
-		 * "Roleplay as [relationship] saying goodbye because [reason]".
-		 */
-		readonly relationships: string[][];
-
-		/**
-		 * Reasons the players are saying goodbye, formatted to fit into
-		 * "Roleplay as [relationship] saying goodbye because [reason]".
-		 */
-		readonly reasonsForSayingGoodbye: string[];
-
-		/**
-		 * Locations where the goodbye is taking place.
-		 */
-		readonly locations: string[];
-	};
-}
-
-/**
- * I Guess This Is It game state.
- */
-export interface IGuessThisIsItState {
-	/**
-	 * The location where the goodbye is taking place.
-	 */
-	location: string;
-
-	/**
-	 * The players and their play data.
-	 */
-	players: {
-		/**
-		 * The unique ID of a Discord user.
-		 */
-		id: string;
-
-		/**
-		 * The display name of a Discord user.
-		 */
-		displayName: string;
-
-		/**
-		 * The relationship type of the player.
-		 */
-		relationship: string;
-
-		/**
-		 * The reason why this player character is saying goodbye.
-		 */
-		reasonForSayingGoodbye?: string;
-
-		/**
-		 * Story card component IDs the player has in hand.
-		 */
-		hand: IGuessThisIsItStoryCardComponent[];
-	}[];
-
-	/**
-	 * The grid of story card component IDs or empty spaces.
-	 */
-	grid: IGuessThisIsItStoryCardComponent[];
-
-	/**
-	 * The goodbye pile of story card component IDs.
-	 */
-	goodbyePile: IGuessThisIsItStoryCardComponent[];
 }

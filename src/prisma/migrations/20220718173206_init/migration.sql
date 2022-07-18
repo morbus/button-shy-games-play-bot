@@ -5,10 +5,10 @@ CREATE TABLE "games" (
     "updated" DATETIME NOT NULL,
     "guildId" TEXT NOT NULL,
     "channelId" TEXT NOT NULL,
-    "authorUserId" TEXT NOT NULL,
+    "authorId" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "command" TEXT NOT NULL,
-    "waitingOnUserId" TEXT,
+    "currentPlayerId" TEXT NOT NULL,
     "ended" BOOLEAN NOT NULL DEFAULT false,
     "state" TEXT NOT NULL DEFAULT '{}'
 );

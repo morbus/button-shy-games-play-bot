@@ -22,10 +22,13 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
-- Plan a game turn. How to handle editable?
+- %igtii GAMEID log to see previous n actions.
+- %igtii GAMEID status to get current playarea?
+  - Should be a method so that start/reroll can use it too.
+- Plan a game turn. How to handle editable? 
+  0. We need to add a "step" tracker to prevent multiple draws, etc.
   1. (once only) IGTII 1234 draw 1..2 (shows updated grid)
      1. Can be skipped if previous player did a "use apology".
-     2. Rerolling must fail once played. canReroll in state?
   2. (once only) IGTII 1234 play LIE on memory/wish/apology/recognition
      1. Must be attached to previous card (can validate this).   
   3. (multiple times) IGTII 1234 narrate []

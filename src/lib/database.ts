@@ -7,7 +7,7 @@ import type { GuildMember } from 'discord.js';
  */
 export function isValidGameUser(game: Game, userId: string): boolean {
 	const state = JSON.parse(game.state);
-	const validUsers = [process.env.BOT_OWNER_USERID, game.authorUserId];
+	const validUsers = [process.env.BOT_OWNER_USERID, game.authorId];
 	validUsers.push(...state.players.map((player: { id: string }) => player.id));
 	return validUsers.includes(userId);
 }

@@ -17,10 +17,10 @@ model Game {
   updated         DateTime @updatedAt /// The time when the game was updated.
   guildId         String /// The unique ID of the Discord guild where the game was created.
   channelId       String /// The unique ID of the Discord channel where the game was created.
-  authorUserId    String /// The unique ID of the Discord user who created the game.
+  authorId        String /// The unique ID of the Discord user who created the game.
   message         String /// The authorUserId's Discord message that created the game.
   command         String /// The Discord command responsible for running this game.
-  waitingOnUserId String? /// The unique ID of the Discord user whose move it is.
+  currentPlayerId String /// The unique ID of the Discord user whose move it is.
   ended           Boolean  @default(false) /// Whether the game has ended.
   state           String   @default("{}") /// The JSON representing the current game state.
 
