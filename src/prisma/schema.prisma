@@ -18,7 +18,7 @@ model Game {
   guildId         String /// The unique ID of the Discord guild where the game was created.
   channelId       String /// The unique ID of the Discord channel where the game was created.
   authorId        String /// The unique ID of the Discord user who created the game.
-  message         String /// The authorUserId's Discord message that created the game.
+  message         String /// The authorId's Discord message that created the game.
   command         String /// The Discord command responsible for running this game.
   currentPlayerId String /// The unique ID of the Discord user whose move it is.
   ended           Boolean  @default(false) /// Whether the game has ended.

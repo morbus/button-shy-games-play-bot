@@ -97,7 +97,6 @@ export class IGuessThisIsItCommand extends Command {
 			canReroll: true,
 			turn: 1,
 			step: 1,
-			location,
 			players: [
 				{
 					id: players[0]!.id,
@@ -113,6 +112,8 @@ export class IGuessThisIsItCommand extends Command {
 					hand: [deck.shift()]
 				}
 			],
+			logs: [],
+			location,
 			grid: deck.splice(0, 12),
 			goodbyePile: deck.splice(0, 2)
 		};
@@ -184,8 +185,6 @@ export class IGuessThisIsItCommand extends Command {
 	 *   %igtii GAMEID draw NUMBER
 	 */
 	public async draw(game: Game, numberToDraw: number, message: Message): Promise<Message> {
-		const state: IGuessThisIsItGameState = JSON.parse(game.state);
-
 		if (numberToDraw < 1 || numberToDraw > 2) {
 			return reply(message, 'Players may only draw 1 or 2 Story cards from the grid.');
 		}
@@ -193,6 +192,8 @@ export class IGuessThisIsItCommand extends Command {
 		if (game.currentPlayerId !== message.author.id) {
 			return reply(message, 'It is not your turn yet. Patience!');
 		}
+
+		const state: IGuessThisIsItGameState = JSON.parse(game.state);
 
 		if (state.step !== 1) {
 			return reply(message, `The current turn is on step ${state.step}, not step 1.`);
@@ -205,13 +206,19 @@ export class IGuessThisIsItCommand extends Command {
 		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
 		state.players[playerIndex].hand.push(...state.grid.splice(0, numberToDraw));
 
+		state.logs.push({
+			created: message.createdTimestamp,
+			authorId: message.author.id,
+			message: message.content
+		});
+
 		// Save game state without changing the current player.
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
 
-		// todo start logging.
-		// todo show grid status.
+		// todo code non-new grid.
+		// todo show grid as embed.
 
-		return reply(message, { content: `<@${state.players[0].id}> <@${state.players[1].id}>` });
+		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}` });
 	}
 
 	/**
@@ -284,11 +291,6 @@ export interface IGuessThisIsItGameState {
 	canReroll: boolean;
 
 	/**
-	 * The location where the goodbye is taking place.
-	 */
-	location: string;
-
-	/**
 	 * The turn number, starting at 1.
 	 */
 	turn: number;
@@ -302,6 +304,33 @@ export interface IGuessThisIsItGameState {
 	 * The players and their play data.
 	 */
 	players: IGuessThisIsItPlayer[];
+
+	/**
+	 * Log entries that players can read to refresh their memories.
+	 */
+	logs: [
+		{
+			/**
+			 * The timestamp of the message that caused this log entry.
+			 */
+			created: number;
+
+			/**
+			 * The unique ID of the Discord user who sent the message.
+			 */
+			authorId: string;
+
+			/**
+			 * The authorId's Discord message that caused this log entry.
+			 */
+			message: string;
+		}?
+	];
+
+	/**
+	 * The location where the goodbye is taking place.
+	 */
+	location: string;
 
 	/**
 	 * The grid of story card components.
