@@ -45,6 +45,10 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `I Guess This Is It \`${action}\` requires a valid game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
 		}
 
+		if (game !== null && game.command !== 'i-guess-this-is-ist') {
+			return reply(message, `Game ID #${gameId} does not belong to I Guess This Is It.`);
+		}
+
 		if (game !== null && !isValidGameUser(game, message.member!.id)) {
 			return reply(message, `Only valid owners or players may interact with this game.`);
 		}
@@ -137,10 +141,7 @@ export class IGuessThisIsItCommand extends Command {
 		await removeGamePlayers(game);
 		await addGamePlayers(game, players);
 
-		const embed = new MessageEmbed()
-			.setColor('#d8d2cd')
-			.setTitle(`I Guess This Is It (#${game.id})`)
-			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png')
+		const embed = this.embedStarter(game)
 			.setDescription(
 				stripIndents`${oneLine`
 					*Game setup is complete. Story cards are identified by their first few letters.
@@ -207,7 +208,7 @@ export class IGuessThisIsItCommand extends Command {
 		});
 
 		state.canReroll = false; // A turn has started, so no more rerolls.
-		state.step = 2; // After drawing comes step 2: play a story card.
+		state.step = 2; // After drawing comes step 2: play a Story card.
 
 		// Move 1 or 2 Story cards from the grid to the player's hand.
 		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
@@ -217,7 +218,7 @@ export class IGuessThisIsItCommand extends Command {
 		// Save game state without changing the current player.
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
 
-		const embed = this.embedTemplate(game)
+		const embed = this.embedStarter(game)
 			.setDescription(
 				stripIndents`${oneLine`
 					*${message.member!.displayName} drew ${oneLineCommaLists`${componentNames(drawnCards)}`}
@@ -238,6 +239,19 @@ export class IGuessThisIsItCommand extends Command {
 			);
 
 		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
+	}
+
+	/**
+	 * Start a game embed with the proper image, title, and color.
+	 *
+	 * Example commands:
+	 *   %igtii GAMEID draw NUMBER
+	 */
+	public embedStarter(game: Game): MessageEmbed {
+		return new MessageEmbed()
+			.setColor('#d8d2cd')
+			.setTitle(`I Guess This Is It (#${game.id})`)
+			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png');
 	}
 
 	/**
@@ -275,19 +289,6 @@ export class IGuessThisIsItCommand extends Command {
 				${constructedGrid[0].publicName}  ${constructedGrid[7].publicName}  ${constructedGrid[8].publicName}
 			`
 		);
-	}
-
-	/**
-	 * Start a game embed with the proper image, title, and color.
-	 *
-	 * Example commands:
-	 *   %igtii GAMEID draw NUMBER
-	 */
-	public embedTemplate(game: Game): MessageEmbed {
-		return new MessageEmbed()
-			.setColor('#d8d2cd')
-			.setTitle(`I Guess This Is It (#${game.id})`)
-			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png');
 	}
 }
 
