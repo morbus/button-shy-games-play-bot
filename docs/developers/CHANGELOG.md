@@ -22,6 +22,7 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
+- %igtii Check GAMEID is actually our game type.
 - %igtii GAMEID log to see previous n actions.
 - %igtii GAMEID status to get current playarea?
   - Should be a method so that start/reroll can use it too.

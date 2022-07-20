@@ -42,7 +42,7 @@ export class IGuessThisIsItCommand extends Command {
 		}
 
 		if (game === null && action !== 'start' && action !== 'help') {
-			return reply(message, `I Guess This Is It \`${action}\` requires a game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
+			return reply(message, `I Guess This Is It \`${action}\` requires a valid game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
 		}
 
 		if (game !== null && !isValidGameUser(game, message.member!.id)) {
@@ -100,14 +100,12 @@ export class IGuessThisIsItCommand extends Command {
 			players: [
 				{
 					id: players[0]!.id,
-					displayName: players[0]!.displayName,
 					relationship: relationship.shift(),
 					reasonForSayingGoodbye,
 					hand: [deck.shift()]
 				},
 				{
 					id: players[1]!.id,
-					displayName: players[1]!.displayName,
 					relationship: relationship.shift(),
 					hand: [deck.shift()]
 				}
@@ -152,29 +150,30 @@ export class IGuessThisIsItCommand extends Command {
 				`}`
 			)
 			.addField(
-				state.players[0].displayName,
+				players[0]!.displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.players[0].relationship} saying
 					goodbye because ${state.players[0].reasonForSayingGoodbye}.
-					Your starting hand is ${oneLineCommaLists`${componentNames(state.players[0].hand)}`}.
+					Your hand contains ${oneLineCommaLists`${componentNames(state.players[0].hand)}`}.
 				`}`,
 				true
 			)
 			.addField(
-				state.players[1].displayName,
+				players[1]!.displayName,
 				stripIndents`${oneLine`
 					Roleplay as ${state.players[1].relationship} who is staying.
-					Your starting hand is ${oneLineCommaLists`${componentNames(state.players[1].hand)}`}.
+					Your hand contains ${oneLineCommaLists`${componentNames(state.players[1].hand)}`}.
 				`}`,
 				true
 			)
 			.addField('Location', state.location, true)
 			.addField('Grid', this.renderGrid(state), true)
-			.addField('Goodbye pile', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
+			.addField('Goodbye pile (`bye`)', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
 			.addField(
-				`${state.players[0].displayName}, it is your turn!`,
+				`${players[0]!.displayName}, it is your turn!`,
 				`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`
 			);
+
 		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
 	}
 
@@ -190,7 +189,7 @@ export class IGuessThisIsItCommand extends Command {
 		}
 
 		if (game.currentPlayerId !== message.author.id) {
-			return reply(message, 'It is not your turn yet. Patience!');
+			return reply(message, `It is <@${game.currentPlayerId}>'s turn. Patience, human!`);
 		}
 
 		const state: IGuessThisIsItGameState = JSON.parse(game.state);
@@ -199,37 +198,73 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `The current turn is on step ${state.step}, not step 1.`);
 		}
 
-		state.canReroll = false; // A turn has started, so no more rerolls.
-		state.step = 2; // After drawing comes step 2: play a story card.
-
-		// Move 1 or 2 Story cards from the grid to the player's hand.
-		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
-		state.players[playerIndex].hand.push(...state.grid.splice(0, numberToDraw));
-
 		state.logs.push({
+			turn: state.turn,
+			step: 1,
 			created: message.createdTimestamp,
 			authorId: message.author.id,
 			message: message.content
 		});
 
+		state.canReroll = false; // A turn has started, so no more rerolls.
+		state.step = 2; // After drawing comes step 2: play a story card.
+
+		// Move 1 or 2 Story cards from the grid to the player's hand.
+		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
+		const drawnCards = state.grid.splice(0, numberToDraw);
+		state.players[playerIndex].hand.push(...drawnCards);
+
 		// Save game state without changing the current player.
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
 
-		// todo code non-new grid.
-		// todo show grid as embed.
+		const embed = this.embedTemplate(game)
+			.setDescription(
+				stripIndents`${oneLine`
+					*${message.member!.displayName} drew ${oneLineCommaLists`${componentNames(drawnCards)}`}
+					from the grid into their hand (${oneLineCommaLists`${componentNames(state.players[playerIndex].hand)}`}).
+					That completes the draw step of this turn. ${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
+				`}`
+			)
+			.addField('Grid', this.renderGrid(state), true)
+			.addField('Goodbye pile (`bye`)', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
+			.addField(
+				`${message.member!.displayName}, it is still your turn!`,
+				stripIndents`${oneLine`
+					Play a Story card with \`${this.command} ${game.id} play CARD on LINKTYPE\`
+					where \`LINKTYPE\` is one of  \`memory\`, \`wish\`, \`apology\`, or \`recognition\`.
+					Note that I am unable to tell if Story cards are overlapping (2.3) and can't
+					rewind the game if a mistake has been made. Be careful, human!
+				`}`
+			);
 
-		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}` });
+		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
 	}
 
 	/**
 	 * Render a 12-cell grid with Story cards, spaces, and a Goodbye pile.
 	 */
 	public renderGrid(state: IGuessThisIsItGameState): string {
-		let constructedGrid: IGuessThisIsItStoryCardComponent[] | { publicName: string }[] = [];
+		let constructedGrid;
 
 		// 12 Story cards is a new game.
 		if (state.grid.length === 12) {
 			constructedGrid = state.grid;
+		} else {
+			// Construct a grid with spaces for drawn cards and the goodbye pile.
+			// const goodbyePilePosition = Math.abs(-12 + (state.goodbyePile.length - 2));
+			// const storyCardsAndGoodbye = state.grid.length + (state.goodbyePile.length - 2);
+			const storyCardsDrawnFromGrid = 12 - state.grid.length;
+
+			// Fill the grid with empty spaces for drawn cards...
+			constructedGrid = Array(storyCardsDrawnFromGrid).fill({ publicName: '···' });
+
+			// then the remaining Story cards...
+			constructedGrid.push(...state.grid);
+
+			// @todo then the Goodbye pile...
+
+			// @todo and then any empty spaces behind the Goodbye pile.
+			// constructedGrid.fill({ publicName: '···' }, constructedGrid.length, 11);
 		}
 
 		return codeBlock(
@@ -240,6 +275,19 @@ export class IGuessThisIsItCommand extends Command {
 				${constructedGrid[0].publicName}  ${constructedGrid[7].publicName}  ${constructedGrid[8].publicName}
 			`
 		);
+	}
+
+	/**
+	 * Start a game embed with the proper image, title, and color.
+	 *
+	 * Example commands:
+	 *   %igtii GAMEID draw NUMBER
+	 */
+	public embedTemplate(game: Game): MessageEmbed {
+		return new MessageEmbed()
+			.setColor('#d8d2cd')
+			.setTitle(`I Guess This Is It (#${game.id})`)
+			.setThumbnail('https://github.com/morbus/button-shy-games-play-bot/raw/main/docs/assets/i-guess-this-is-it--cover.png');
 	}
 }
 
@@ -291,12 +339,12 @@ export interface IGuessThisIsItGameState {
 	canReroll: boolean;
 
 	/**
-	 * The turn number, starting at 1.
+	 * The turn number.
 	 */
 	turn: number;
 
 	/**
-	 * The step number of the current turn (1 through 5).
+	 * The step number of the current turn.
 	 */
 	step: number;
 
@@ -311,7 +359,17 @@ export interface IGuessThisIsItGameState {
 	logs: [
 		{
 			/**
-			 * The timestamp of the message that caused this log entry.
+			 * The turn number when this log was created.
+			 */
+			turn: number;
+
+			/**
+			 * The step number of the turn when this log was created.
+			 */
+			step: number;
+
+			/**
+			 * The timestamp of the message that created this log.
 			 */
 			created: number;
 
@@ -321,7 +379,7 @@ export interface IGuessThisIsItGameState {
 			authorId: string;
 
 			/**
-			 * The authorId's Discord message that caused this log entry.
+			 * The authorId's Discord message that created this log entry.
 			 */
 			message: string;
 		}?
@@ -351,11 +409,6 @@ export interface IGuessThisIsItPlayer {
 	 * The unique ID of a Discord user.
 	 */
 	id: string;
-
-	/**
-	 * The display name of a Discord user.
-	 */
-	displayName: string;
 
 	/**
 	 * The relationship type of the player.
