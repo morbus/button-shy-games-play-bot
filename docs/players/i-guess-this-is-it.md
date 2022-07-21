@@ -48,7 +48,7 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii
 | `start`             | **Required.** The game action you want to take.              |
 | `@PLAYER1 @PLAYER2` | **Required.** The two player mentions to start the game for. |
 
-## Drawing Story cards from the grid
+## Draw 1 or 2 Story cards from the grid
 
 <div class="discord-messages">
   <div class="discord-message">
@@ -69,9 +69,38 @@ This game can be referenced as `IGuessThisIsIt`, `i-guess-this-is-it`, or `igtii
   </div>
 </div>
 
-| Arguments | Description                                                    |
-|-----------|----------------------------------------------------------------|
-| `%igtii`  | **Required.** The game name you want to play.                  |
-| `GAMEID`  | **Required.** The unique ID that represents your game.         |
-| `draw`    | **Required.** The game action you want to take.                |
-| `NUMBER`  | **Required.** The number of cards to draw (either `1` or `2`). |
+| Arguments | Description                                            |
+|-----------|--------------------------------------------------------|
+| `%igtii`  | **Required.** The game name you want to play.          |
+| `GAMEID`  | **Required.** The unique ID that represents your game. |
+| `draw`    | **Required.** The game action you want to take.        |
+| `NUMBER`  | **Required.** The number of cards to draw: `1` or `2`. |
+
+## Play a Story card from your hand
+
+<div class="discord-messages">
+  <div class="discord-message">
+    <div class="discord-message-content">
+      <div class="discord-author-avatar">
+        <img src="https://cdn.discordapp.com/avatars/210832949904408577/de284c63bedc8a161782e959288bda2b.png" alt="">
+      </div>
+      <div class="discord-message-body">
+        <div class="discord-message-author">
+          <span class="discord-author-info"><span class="discord-author-username">Morbus Iff</span></span>
+          <span class="discord-message-timestamp">Today at 6:58 PM</span>
+        </div>
+        <div class="discord-message-text">
+          %igtii 12345 play PAS on MEMORY
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+| Arguments     | Description                                                                                   |
+|---------------|-----------------------------------------------------------------------------------------------|
+| `%igtii`      | **Required.** The game name you want to play.                                                 |
+| `GAMEID`      | **Required.** The unique ID that represents your game.                                        |
+| `play`        | **Required.** The game action you want to take.                                               |
+| `CARD`        | **Required.** The name of the Story card you're playing (ex. `BAR`).                          |
+| `on LINKTYPE` | **Required.** The link type you're connecting: `MEMORY`, `WISH`, `APOLOGY`, or `RECOGNITION`. |  
