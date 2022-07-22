@@ -12,7 +12,7 @@ import { oneLine, oneLineCommaLists, stripIndents } from 'common-tags';
 import type { GuildMember, Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 
-const gameData: IGuessThisIsItGameData = _gameData;
+const gameData: IGuessThisIsItData = _gameData;
 
 @ApplyOptions<CommandOptions>({
 	name: 'IGuessThisIsIt',
@@ -45,7 +45,7 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `I Guess This Is It \`${action}\` requires a valid game ID: \`${this.command} GAMEID ${action} [OPTIONS]\`.`);
 		}
 
-		if (game !== null && game.command !== 'i-guess-this-is-ist') {
+		if (game !== null && game.command !== 'i-guess-this-is-it') {
 			return reply(message, `Game ID #${gameId} does not belong to I Guess This Is It.`);
 		}
 
@@ -63,6 +63,12 @@ export class IGuessThisIsItCommand extends Command {
 			case 'draw': {
 				const numberToDraw = await args.pick('number').catch(() => 1);
 				return this.draw(game!, numberToDraw, message);
+			}
+
+			case 'play': {
+				const storyCardPublicName = await args.pick('string').catch(() => '???');
+				const linkType = await args.rest('string').catch(() => 'ON ???');
+				return this.play(game!, storyCardPublicName, linkType, message);
 			}
 		}
 
@@ -91,13 +97,14 @@ export class IGuessThisIsItCommand extends Command {
 		}
 
 		if (game !== null) {
-			const state: IGuessThisIsItGameState = JSON.parse(game.state);
+			const state: IGuessThisIsItState = JSON.parse(game.state);
+
 			if (!state.canReroll) {
 				return reply(message, 'This game has already started and can no longer be rerolled.');
 			}
 		}
 
-		const state: IGuessThisIsItGameState = {
+		const state: IGuessThisIsItState = {
 			canReroll: true,
 			turn: 1,
 			step: 1,
@@ -193,7 +200,7 @@ export class IGuessThisIsItCommand extends Command {
 			return reply(message, `It is <@${game.currentPlayerId}>'s turn. Patience, human!`);
 		}
 
-		const state: IGuessThisIsItGameState = JSON.parse(game.state);
+		const state: IGuessThisIsItState = JSON.parse(game.state);
 
 		if (state.step !== 1) {
 			return reply(message, `The current turn is on step ${state.step}, not step 1.`);
@@ -212,8 +219,8 @@ export class IGuessThisIsItCommand extends Command {
 
 		// Move 1 or 2 Story cards from the grid to the player's hand.
 		const playerIndex = state.players.findIndex((player: IGuessThisIsItPlayer) => (player.id = message.author.id));
-		const drawnCards = state.grid.splice(0, numberToDraw);
-		state.players[playerIndex].hand.push(...drawnCards);
+		const drawnStoryCards = state.grid.splice(0, numberToDraw);
+		state.players[playerIndex].hand.push(...drawnStoryCards);
 
 		// Save game state without changing the current player.
 		game = await this.container.prisma.game.update({ where: { id: game.id }, data: { state: JSON.stringify(state) } });
@@ -221,7 +228,7 @@ export class IGuessThisIsItCommand extends Command {
 		const embed = this.embedStarter(game)
 			.setDescription(
 				stripIndents`${oneLine`
-					*${message.member!.displayName} drew ${oneLineCommaLists`${componentNames(drawnCards)}`}
+					*${message.member!.displayName} drew ${oneLineCommaLists`${componentNames(drawnStoryCards)}`}
 					from the grid into their hand (${oneLineCommaLists`${componentNames(state.players[playerIndex].hand)}`}).
 					That completes the draw step of this turn. ${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
@@ -231,14 +238,33 @@ export class IGuessThisIsItCommand extends Command {
 			.addField(
 				`${message.member!.displayName}, it is still your turn!`,
 				stripIndents`${oneLine`
-					Play a Story card with \`${this.command} ${game.id} play CARD on LINKTYPE\`
-					where \`LINKTYPE\` is one of  \`memory\`, \`wish\`, \`apology\`, or \`recognition\`.
-					Note that I am unable to tell if Story cards are overlapping (2.3) and can't
-					rewind the game if a mistake has been made. Be careful, human!
+					Play a Story card from your hand with \`${this.command} ${game.id} play CARD on
+					LINKTYPE\` where \`LINKTYPE\` is  \`MEMORY\`, \`WISH\`, \`APOLOGY\`, or \`RECOGNITION\`.
+					Note that I can't tell if Story cards are overlapping (2.3) or rewind the game if a
+					mistake has been made. Be careful, human!
 				`}`
 			);
 
 		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
+	}
+
+	/**
+	 * Play a Story card from your hand.
+	 *
+	 * Example commands:
+	 *   %igtii GAMEID play CARD on LINKTYPE
+	 */
+	public async play(game: Game, storyCardPublicName: string, linkType: string, message: Message): Promise<Message> {
+		// @todo need previousCard info.
+		// @todo add playedCard array?
+		// @todo card in hand.
+		// @todo step is 2.
+		console.dir(storyCardPublicName);
+		console.dir(linkType);
+
+		const state: IGuessThisIsItState = JSON.parse(game.state);
+
+		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}` });
 	}
 
 	/**
@@ -257,7 +283,7 @@ export class IGuessThisIsItCommand extends Command {
 	/**
 	 * Render a 12-cell grid with Story cards, spaces, and a Goodbye pile.
 	 */
-	public renderGrid(state: IGuessThisIsItGameState): string {
+	public renderGrid(state: IGuessThisIsItState): string {
 		let constructedGrid;
 
 		// 12 Story cards is a new game.
@@ -295,7 +321,7 @@ export class IGuessThisIsItCommand extends Command {
 /**
  * I Guess This Is It game data.
  */
-export interface IGuessThisIsItGameData {
+export interface IGuessThisIsItData {
 	/**
 	 * Private game data that should never be distributed.
 	 */
@@ -303,10 +329,16 @@ export interface IGuessThisIsItGameData {
 		readonly __WARNING__: string;
 
 		/**
-		 * The story card components.
+		 * I Guess This Is It card components.
 		 */
-		readonly storyCards: IGuessThisIsItStoryCardComponent[];
+		readonly iGuessThisIsItCards: IGuessThisIsItCardComponent[];
+
+		/**
+		 * Story card components.
+		 */
+		readonly storyCards: IGuessThisIsItCardComponent[];
 	};
+
 	/**
 	 * Private game data that can be distributed.
 	 */
@@ -333,7 +365,7 @@ export interface IGuessThisIsItGameData {
 /**
  * I Guess This Is It game state.
  */
-export interface IGuessThisIsItGameState {
+export interface IGuessThisIsItState {
 	/**
 	 * A boolean indicating whether the game can be rerolled.
 	 */
@@ -394,12 +426,12 @@ export interface IGuessThisIsItGameState {
 	/**
 	 * The grid of story card components.
 	 */
-	grid: IGuessThisIsItStoryCardComponent[];
+	grid: IGuessThisIsItCardComponent[];
 
 	/**
 	 * The goodbye pile of story card components.
 	 */
-	goodbyePile: IGuessThisIsItStoryCardComponent[];
+	goodbyePile: IGuessThisIsItCardComponent[];
 }
 
 /**
@@ -424,13 +456,13 @@ export interface IGuessThisIsItPlayer {
 	/**
 	 * Story card component the player has in hand.
 	 */
-	hand: IGuessThisIsItStoryCardComponent[];
+	hand: IGuessThisIsItCardComponent[];
 }
 
 /**
- * I Guess This Is It story card game component.
+ * I Guess This Is It card game component.
  */
-export interface IGuessThisIsItStoryCardComponent {
+export interface IGuessThisIsItCardComponent {
 	/**
 	 * The unique ID of the component.
 	 */

@@ -22,13 +22,13 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
+- There are two sides to the IGTII card.
 - %igtii GAMEID abandon to end a game immediately.
 - %igtii GAMEID log to see previous n actions.
-- %igtii GAMEID status to get current playarea?
-  - Should be a method so that start/reroll can use it too.
-- Plan a game turn. How to handle editable? 
-  1. (once only) %igtii GAMEID draw 1/2
-     1. Can be skipped if previous player did a "use apology".
+- %igtii GAMEID status to get current play area?
+  - Should be a method that start/reroll can use too.
+- Implement a game turn. 
+  1. "draw" can be skipped if a player used apology.
   2. (once only) %igtii GAMEID play LIE on memory/wish/apology/recognition
      1. Must be attached to previous card (can validate this).   
   3. (multiple times) %igtii GAMEID narrate []
@@ -49,7 +49,7 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- I Guess This Is It game stubbed out.
+- I Guess This Is It development begins.
 - Prisma database support stubbed out.
 - GitHub Pages documentation stubbed out.
 - Everything everything all at once is added. 

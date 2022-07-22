@@ -1,16 +1,28 @@
 {
 	"private": {
 		"__WARNING__": "Do not distribute private game data.",
+		"iGuessThisIsItCards": [
+			{
+				"id": "iGuessThisIsItA",
+				"setId": "base",
+				"publicName": "IGTIIA",
+				"privateName": "I Guess This Is It (Side A)",
+				"top": "memory",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		],
 		"storyCards": [
 			{
-				"id": "demoTitle",
+				"id": "demoStoryCard",
 				"setId": "base",
 				"publicName": "DEM",
-				"privateName": "Demo Title",
-				"top": "recognition",
-				"right": "apology",
-				"bottom": "memory",
-				"left": "wish"
+				"privateName": "Demo Story Card",
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
 			}
 		]
 	},
