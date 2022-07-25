@@ -249,7 +249,7 @@ export class IGuessThisIsItCommand extends Command {
 					value: stripIndents`${oneLine`
 						Play a Story card from your hand with \`${this.command} ${game.id} play CARD on
 						LINKTYPE\` where \`LINKTYPE\` is  \`MEMORY\`, \`WISH\`, \`APOLOGY\`, or \`RECOGNITION\`.
-						Note that I can't tell if Story cards are overlapping (2.3) or rewind the game if a
+						Note that I can't tell if Story cards are overlapping or rewind the game if a
 						mistake has been made. Be careful, human!
 					`}`
 				}
