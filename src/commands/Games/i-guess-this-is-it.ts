@@ -84,6 +84,7 @@ export class IGuessThisIsItCommand extends Command {
 	 * @see reroll()
 	 */
 	public async start(game: Game | null, players: (GuildMember | null)[], message: Message): Promise<Message> {
+		const iGuessThisIsItCard = shuffle(gameData.private.iGuessThisIsItCards).shift();
 		const relationship = shuffle(shuffle(gameData.public.relationships).shift());
 		const reasonForSayingGoodbye = shuffle(gameData.public.reasonsForSayingGoodbye).shift();
 		const location = shuffle(gameData.public.locations).shift();
@@ -122,6 +123,7 @@ export class IGuessThisIsItCommand extends Command {
 				}
 			],
 			logs: [],
+			iGuessThisIsItCard,
 			location,
 			grid: deck.splice(0, 12),
 			goodbyePile: deck.splice(0, 2)
@@ -157,29 +159,35 @@ export class IGuessThisIsItCommand extends Command {
 					${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
 			)
-			.addField(
-				players[0]!.displayName,
-				stripIndents`${oneLine`
-					Roleplay as ${state.players[0].relationship} saying
-					goodbye because ${state.players[0].reasonForSayingGoodbye}.
-					Your hand contains ${oneLineCommaLists`${componentNames(state.players[0].hand)}`}.
-				`}`,
-				true
-			)
-			.addField(
-				players[1]!.displayName,
-				stripIndents`${oneLine`
-					Roleplay as ${state.players[1].relationship} who is staying.
-					Your hand contains ${oneLineCommaLists`${componentNames(state.players[1].hand)}`}.
-				`}`,
-				true
-			)
-			.addField('Location', state.location, true)
-			.addField('Grid', this.renderGrid(state), true)
-			.addField('Goodbye pile (`bye`)', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
-			.addField(
-				`${players[0]!.displayName}, it is your turn!`,
-				`Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`
+			.addFields(
+				{
+					name: players[0]!.displayName,
+					value: stripIndents`${oneLine`
+						Roleplay as ${state.players[0].relationship} saying
+						goodbye because ${state.players[0].reasonForSayingGoodbye}.
+						Your hand contains ${oneLineCommaLists`${componentNames(state.players[0].hand)}`}.
+					`}`,
+					inline: true
+				},
+				{
+					name: players[1]!.displayName,
+					value: stripIndents`${oneLine`
+						Roleplay as ${state.players[1].relationship} who is staying.
+						Your hand contains ${oneLineCommaLists`${componentNames(state.players[1].hand)}`}.
+					`}`,
+					inline: true
+				},
+				{ name: 'Location', value: state.location, inline: true },
+				{
+					name: 'I Guess This Is It card',
+					value: `Use the I Guess This Is It card with \`${state.iGuessThisIsItCard.top.toUpperCase()}\` in the top position.`
+				},
+				{ name: 'Grid', value: this.renderGrid(state), inline: true },
+				{ name: 'Goodbye pile (`bye`)', value: oneLineCommaLists`${componentNames(state.goodbyePile)}`, inline: true },
+				{
+					name: `${players[0]!.displayName}, it is your turn!`,
+					value: `Draw 1 or 2 Story cards from the grid with \`${this.command} ${game.id} draw NUMBER\`.`
+				}
 			);
 
 		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
@@ -233,16 +241,18 @@ export class IGuessThisIsItCommand extends Command {
 					That completes the draw step of this turn. ${hyperlink('Read more »', process.env.README_I_GUESS_THIS_IS_IT!)}*
 				`}`
 			)
-			.addField('Grid', this.renderGrid(state), true)
-			.addField('Goodbye pile (`bye`)', oneLineCommaLists`${componentNames(state.goodbyePile)}`, true)
-			.addField(
-				`${message.member!.displayName}, it is still your turn!`,
-				stripIndents`${oneLine`
-					Play a Story card from your hand with \`${this.command} ${game.id} play CARD on
-					LINKTYPE\` where \`LINKTYPE\` is  \`MEMORY\`, \`WISH\`, \`APOLOGY\`, or \`RECOGNITION\`.
-					Note that I can't tell if Story cards are overlapping (2.3) or rewind the game if a
-					mistake has been made. Be careful, human!
-				`}`
+			.addFields(
+				{ name: 'Grid', value: this.renderGrid(state), inline: true },
+				{ name: 'Goodbye pile (`bye`)', value: oneLineCommaLists`${componentNames(state.goodbyePile)}`, inline: true },
+				{
+					name: `${message.member!.displayName}, it is still your turn!`,
+					value: stripIndents`${oneLine`
+						Play a Story card from your hand with \`${this.command} ${game.id} play CARD on
+						LINKTYPE\` where \`LINKTYPE\` is  \`MEMORY\`, \`WISH\`, \`APOLOGY\`, or \`RECOGNITION\`.
+						Note that I can't tell if Story cards are overlapping (2.3) or rewind the game if a
+						mistake has been made. Be careful, human!
+					`}`
+				}
 			);
 
 		return reply(message, { content: oneLineCommaLists`${playersToMentions(state.players)}`, embeds: [embed] });
@@ -417,6 +427,11 @@ export interface IGuessThisIsItState {
 			message: string;
 		}?
 	];
+
+	/**
+	 * The I Guess This Is It card component.
+	 */
+	iGuessThisIsItCard: IGuessThisIsItCardComponent;
 
 	/**
 	 * The location where the goodbye is taking place.

@@ -22,7 +22,7 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### I Guess This Is It
 
-- There are two sides to the IGTII card.
+- Add 'reroll' to the IGTII docs.
 - %igtii GAMEID abandon to end a game immediately.
 - %igtii GAMEID log to see previous n actions.
 - %igtii GAMEID status to get current play area?
